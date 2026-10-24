@@ -1,0 +1,1921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Future of War Timeline</title>
+<meta name="description" content="A scrolling, interactive timeline from the theory of why war happens (1995) through today's overlooked asymmetries (2026) to 2036, 2046 and the world after AGI, with simulations you can run in the browser.">
+<style>
+/* ---------- Tokens (same as docs/style.css) ---------- */
+:root {
+  --bg: #faf9f6; --fg: #1a1a1a; --muted: #5f5f5f; --rule: #e2ded6;
+  --accent: #8b1e1e; --card: #ffffff; --draft: #fff3c4; --draft-fg: #6b5300;
+  --side-a: #8b1e1e; --side-b: #1f6f9f;
+  --dom-land: #6b8e23; --dom-sea: #1f6f9f; --dom-air: #4a9ad1; --dom-space: #7a4ec9;
+  --dom-cyber: #159a86; --dom-ai: #d08a1e; --dom-nuclear: #c0392b;
+  --proj: #e8e4f7; --proj-fg: #3f2d7a; --ana: #e3eef7; --ana-fg: #1c4a6e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141414; --fg: #ececec; --muted: #a3a3a3; --rule: #2c2c2c;
+    --accent: #e06c6c; --card: #1d1d1d; --draft: #3a3000; --draft-fg: #ffe68a;
+    --side-a: #e06c6c; --side-b: #5aa9e6;
+    --dom-land: #9bc253; --dom-sea: #5aa9e6; --dom-air: #8cc5f0; --dom-space: #b08cf0;
+    --dom-cyber: #3fcdb6; --dom-ai: #f0b452; --dom-nuclear: #f07c6e;
+    --proj: #2a2345; --proj-fg: #cdbfff; --ana: #1b2b3a; --ana-fg: #a9d1f0;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141414; --fg: #ececec; --muted: #a3a3a3; --rule: #2c2c2c;
+  --accent: #e06c6c; --card: #1d1d1d; --draft: #3a3000; --draft-fg: #ffe68a;
+  --side-a: #e06c6c; --side-b: #5aa9e6;
+  --dom-land: #9bc253; --dom-sea: #5aa9e6; --dom-air: #8cc5f0; --dom-space: #b08cf0;
+  --dom-cyber: #3fcdb6; --dom-ai: #f0b452; --dom-nuclear: #f07c6e;
+  --proj: #2a2345; --proj-fg: #cdbfff; --ana: #1b2b3a; --ana-fg: #a9d1f0;
+}
+
+/* ---------- Base (from docs/style.css) ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--fg);
+       font: 17px/1.6 Georgia, "Iowan Old Style", "Times New Roman", serif; overflow-x: hidden; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+.topnav { border-bottom: 1px solid var(--rule); font: 14px/1.4 system-ui, sans-serif; }
+.topnav .wrap { display: flex; flex-wrap: wrap; gap: 4px 22px; align-items: center; min-height: 48px; }
+.topnav a { color: var(--fg); text-decoration: none; padding: 14px 0; border-bottom: 2px solid transparent; }
+.topnav a[aria-current="page"] { border-bottom-color: var(--accent); font-weight: 600; }
+.topnav .brand { font-weight: 700; margin-right: auto; }
+.kicker { font: 600 13px/1.4 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: 2.3rem; line-height: 1.1; margin: 10px 0 14px; letter-spacing: -.01em; }
+.dek { font-size: 1.2rem; color: var(--muted); margin: 0 0 14px; }
+.meta { font: 14px/1.5 system-ui, sans-serif; color: var(--muted); }
+h2 { font-size: 1.5rem; margin: 0 0 12px; line-height: 1.2; }
+h3 { font: 600 1.05rem/1.3 system-ui, sans-serif; margin: 26px 0 8px; }
+p { margin: 0 0 16px; }
+a { color: var(--accent); }
+ul, ol { padding-left: 22px; } li { margin-bottom: 6px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.draft { display: inline-block; background: var(--draft); color: var(--draft-fg);
+         font: 600 11px/1 system-ui, sans-serif; padding: 4px 7px; border-radius: 4px;
+         letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+.call { background: var(--card); border-left: 4px solid var(--accent); padding: 16px 20px; margin: 24px 0; font-size: 1.12rem; }
+table { width: 100%; border-collapse: collapse; font: 15px/1.45 system-ui, sans-serif; margin: 16px 0 24px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 8px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; }
+.card h4 { margin: 0 0 4px; font: 600 15px/1.3 system-ui, sans-serif; }
+.card p { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: var(--muted); }
+code { font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--card); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--rule); }
+footer { padding: 40px 0 60px; border-top: 1px solid var(--rule); margin-top: 64px; font: 14px/1.6 system-ui, sans-serif; color: var(--muted); }
+.controls { display: grid; grid-template-columns: 1fr; gap: 10px 24px; margin: 16px 0; font: 14px/1.4 system-ui, sans-serif; }
+@media (min-width: 640px) { .controls { grid-template-columns: 1fr 1fr; } }
+.ctl { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; }
+.ctl label { font-weight: 600; }
+.ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
+.ctl input[type=range] { grid-column: 1 / -1; width: 100%; margin: 0; }
+.ctl select { grid-column: 1 / -1; font: 14px system-ui, sans-serif; padding: 6px 8px; background: var(--card); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px; }
+.ctl.check { grid-template-columns: auto 1fr; }
+.ctl.check input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+.ctl.disabled { opacity: .45; }
+input[type=range] { accent-color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+@media (min-width: 640px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+.stat { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.stat .label { font: 600 12px/1.3 system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.stat .value { font: 600 1.4rem/1.2 system-ui, sans-serif; margin-top: 4px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.stat .value.warn { color: var(--accent); }
+.stat .sub { font: 13px/1.4 system-ui, sans-serif; color: var(--muted); }
+canvas.plot { width: 100%; display: block; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; touch-action: none; }
+
+/* ---------- Year bar ---------- */
+.yearbar { position: sticky; top: 0; z-index: 30; background: var(--bg); border-bottom: 1px solid var(--rule); }
+.yb-inner { height: 56px; display: grid; grid-template-columns: auto auto 1fr; gap: 0 18px; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0 16px; }
+.yb-year { font: 700 30px/1 ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; letter-spacing: .02em; min-width: 5ch; }
+.yb-year.text { font-size: 17px; letter-spacing: .06em; text-transform: uppercase; }
+.yb-era { font: 600 14px/1.3 system-ui, sans-serif; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.yb-track { position: relative; height: 56px; min-width: 0; }
+.yb-track .rail { position: absolute; left: 10px; right: 34px; top: 27px; height: 2px; background: var(--rule); }
+.yb-track .fill { position: absolute; left: 10px; top: 27px; height: 2px; background: var(--accent); width: 0; transition: width .4s; }
+.yb-track .mk { position: absolute; top: 0; height: 56px; width: 20px; margin-left: -10px; background: none; border: 0; padding: 0; cursor: pointer; color: var(--muted); font: 600 11px/1 system-ui, sans-serif; }
+.yb-track .mk::before { content: ""; position: absolute; left: 5px; top: 23px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 2px solid var(--muted); }
+.yb-track .mk.done::before { background: var(--accent); border-color: var(--accent); }
+.yb-track .mk.on::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent); }
+.yb-track .mk span { position: absolute; left: 50%; transform: translateX(-50%); top: 40px; white-space: nowrap; }
+.yb-track .mk:last-child span { left: auto; right: -8px; transform: none; }
+.yb-track .mk.on span { color: var(--fg); }
+.yb-track .mk:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
+@media (max-width: 560px) { .yb-track .mk span { display: none; } .yb-track .mk.on span { display: block; } .yb-era { display: none; } .yb-inner { grid-template-columns: auto 1fr; } }
+
+/* Phone / narrow dashboard strip */
+.dash-strip { display: none; border-top: 1px solid var(--rule); background: var(--card); font: 12px/1.3 system-ui, sans-serif; }
+.dash-strip .in { display: flex; gap: 14px; align-items: center; max-width: 1400px; margin: 0 auto; padding: 6px 16px; overflow-x: auto; }
+.dash-strip .it { white-space: nowrap; color: var(--muted); }
+.dash-strip .it b { color: var(--fg); font-weight: 600; }
+.dash-strip .ptag { margin-left: auto; }
+@media (max-width: 1059px) { .dash-strip { display: block; } }
+
+/* ---------- Layout ---------- */
+.layout { display: grid; grid-template-columns: 72px minmax(0, 1fr) 260px; gap: 0 24px; max-width: 1400px; margin: 0 auto; padding: 0 16px; }
+.content { min-width: 0; }
+@media (max-width: 1059px) { .layout { grid-template-columns: 72px minmax(0, 1fr); } .dash { display: none; } }
+@media (max-width: 719px) { .layout { grid-template-columns: minmax(0, 1fr); } .lanes { display: none; } }
+
+/* Lanes (left rail minimap) */
+.lanes { position: sticky; top: 56px; height: calc(100vh - 56px); height: calc(100dvh - 56px); align-self: start; padding: 10px 0 14px; font: 600 9px/1 system-ui, sans-serif; color: var(--muted); }
+.lanes .hdr { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; height: 14px; }
+.lanes .hdr span { transition: color .2s; }
+.lanes .hdr span.on { color: var(--fg); }
+.lanes .body { position: relative; height: calc(100% - 20px); display: grid; grid-template-columns: repeat(7, 1fr); }
+.lanes .lane { position: relative; border-left: 1px dashed var(--rule); }
+.lanes .lane::after { content: ""; position: absolute; inset: 0; background: var(--lc); opacity: 0; transition: opacity .25s; }
+.lanes .lane.on::after { opacity: .10; }
+.lanes .ld { position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; margin-top: -3.5px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--lc); opacity: .5; transition: opacity .25s, transform .25s; }
+.lanes .ld.lit { background: var(--lc); opacity: 1; }
+.lanes .ld.hollow.lit { background: var(--bg); border-width: 2px; }
+.lanes .ld.on { transform: scale(1.7); box-shadow: 0 0 0 3px color-mix(in srgb, var(--lc) 30%, transparent); }
+.lanes .vp { position: absolute; left: 0; right: 0; height: 2px; background: var(--accent); opacity: .6; pointer-events: none; }
+
+/* Dashboard (right rail) */
+.dash { position: sticky; top: 72px; align-self: start; padding: 10px 0 0; font: 13px/1.4 system-ui, sans-serif; }
+.dash .box { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; }
+.dash .title { font-weight: 600; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.dash .ind { margin: 10px 0 0; }
+.dash .ind .row { display: flex; justify-content: space-between; gap: 8px; }
+.dash .ind .row b { font-weight: 600; }
+.dash .ind .val { color: var(--muted); font-variant-numeric: tabular-nums; }
+.dash .bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-top: 4px; }
+.dash .bar i { display: block; height: 6px; border-radius: 2px; background: var(--rule); overflow: hidden; }
+.dash .bar i b { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.dash .foot { margin-top: 12px; color: var(--muted); font-size: 12px; }
+.ptag { display: inline-block; font: 700 10px/1 system-ui, sans-serif; letter-spacing: .08em; padding: 4px 6px; border-radius: 4px; background: var(--proj); color: var(--proj-fg); vertical-align: middle; }
+.ptag.ana { background: var(--ana); color: var(--ana-fg); }
+.ptag.hidden { visibility: hidden; }
+
+/* ---------- Content column ---------- */
+.hero { max-width: 720px; margin: 0 auto; padding: 56px 0 40px; border-bottom: 1px solid var(--rule); }
+.hero .qs { display: grid; gap: 12px; margin: 22px 0; }
+.hero .q { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 18px; }
+.hero .q .kicker { margin-bottom: 4px; }
+.hero .q p { margin: 0; font-size: 1.05rem; }
+.hero .cue { font: 600 13px/1.4 system-ui, sans-serif; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-top: 28px; }
+.hero .cue::after { content: "↓"; display: inline-block; margin-left: 8px; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(4px) } }
+@media (prefers-reduced-motion: reduce) { .hero .cue::after { animation: none; } }
+
+.era-header { max-width: 720px; margin: 72px auto 8px; scroll-margin-top: 72px; padding-top: 24px; }
+.era-header .ey { font: 700 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .1em; color: var(--muted); margin-bottom: 8px; }
+.era-header h2 { font-size: 1.7rem; }
+.era-header .eq { font: 14px/1.5 system-ui, sans-serif; color: var(--muted); }
+
+.spine-wrap { position: relative; padding-left: 28px; }
+.spine-wrap::before { content: ""; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--rule); }
+.station { position: relative; max-width: 720px; margin: 0 auto; padding: 28px 0 24px; scroll-margin-top: 80px; }
+.station.has-sim { max-width: 960px; }
+.station .dot { position: absolute; left: -28px; top: 36px; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 3px solid var(--bg); box-shadow: 0 0 0 2px var(--rule); transition: box-shadow .25s; }
+.station .dot.hollow { background: var(--bg); box-shadow: 0 0 0 2px var(--accent); }
+.station.active .dot { box-shadow: 0 0 0 2px var(--accent), 0 0 0 7px color-mix(in srgb, var(--accent) 20%, transparent); }
+.st-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font: 13px/1.3 system-ui, sans-serif; color: var(--muted); }
+.st-year { font: 700 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font: 600 11px/1 system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; padding: 4px 7px; border-radius: 4px; border: 1px solid var(--rule); color: var(--fg); }
+.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dc); }
+.station h3 { font: 700 1.35rem/1.25 Georgia, "Iowan Old Style", "Times New Roman", serif; margin: 8px 0 10px; letter-spacing: -.005em; }
+.station p { font-size: 1.02rem; }
+.station .src { font: 14px/1.5 system-ui, sans-serif; color: var(--muted); margin: 0; }
+.station .src a { margin-right: 4px; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 6px 0 16px; }
+@media (min-width: 560px) { .cards { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) { .station.has-cards .cards { grid-template-columns: 1fr 1fr 1fr; } }
+.station.has-cards { max-width: 960px; }
+
+/* ---------- Simulation blocks ---------- */
+.simbox { margin: 20px 0 8px; padding: 16px; border: 1px solid var(--rule); border-radius: 10px; background: color-mix(in srgb, var(--card) 60%, var(--bg)); }
+.simbox .sim-title { font: 600 12px/1.3 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.sim-vis { display: grid; gap: 12px; }
+.sim-vis .two { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 760px) { .sim-vis .two { grid-template-columns: 1fr 1fr; } }
+.sim-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+.btn { font: 600 13px/1 system-ui, sans-serif; padding: 9px 13px; border-radius: 6px; border: 1px solid var(--rule); background: var(--card); color: var(--fg); cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.sim-summary { font: 14px/1.5 system-ui, sans-serif; margin: 10px 0 0; }
+.sim-caption { font: italic 13px/1.4 system-ui, sans-serif; color: var(--muted); margin: 6px 0 0; }
+.sim-assump { font: 13px/1.5 system-ui, sans-serif; color: var(--muted); margin-top: 8px; }
+.sim-assump summary { cursor: pointer; font-weight: 600; }
+.sim-assump ul { margin: 6px 0 0; padding-left: 18px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 12px/1.3 system-ui, sans-serif; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--lc); margin-right: 6px; vertical-align: -1px; }
+.legend span.dash::before { height: 2px; vertical-align: 3px; background: repeating-linear-gradient(90deg, var(--lc) 0 3px, transparent 3px 5px); }
+.bars { display: grid; gap: 8px; font: 13px/1.3 system-ui, sans-serif; }
+.bars .b { display: grid; grid-template-columns: minmax(120px, 170px) 1fr 48px; gap: 10px; align-items: center; }
+.bars .b .t { position: relative; height: 16px; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.bars .b .t i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--accent); transition: width .5s ease; }
+.bars .b .v { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.bars .b.hid .t i { background: var(--side-b); }
+.badge { display: inline-block; font: 700 11px/1 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 4px; background: var(--accent); color: #fff; }
+.badge.off { background: var(--rule); color: var(--muted); }
+.srcbtns { display: flex; flex-wrap: wrap; gap: 8px; }
+.log { font: 13px/1.5 system-ui, sans-serif; color: var(--muted); margin: 0; padding-left: 18px; }
+.chain { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; font: 13px/1.3 system-ui, sans-serif; }
+.chain .node { flex: 1 1 110px; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 10px; position: relative; min-width: 100px; }
+.chain .node b { display: block; font-weight: 600; }
+.chain .node .sh { color: var(--muted); font-variant-numeric: tabular-nums; }
+.chain .node .fill { height: 6px; background: var(--rule); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+.chain .node .fill i { display: block; height: 100%; background: var(--muted); }
+.chain .node.bottleneck { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+.chain .node.bottleneck .fill i { background: var(--accent); }
+.chain .node.bottleneck::after { content: "BOTTLENECK"; position: absolute; right: 8px; top: 8px; font: 700 9px/1 system-ui, sans-serif; letter-spacing: .08em; color: var(--accent); }
+.meter { height: 10px; background: var(--rule); border-radius: 5px; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.hint { font: 13px/1.5 system-ui, sans-serif; color: var(--muted); margin: 0 0 8px; }
+.ui { font: 14px/1.5 system-ui, sans-serif; }
+
+/* ---------- Conclusion, sources ---------- */
+.conclusion { max-width: 720px; margin: 80px auto 0; padding-top: 24px; border-top: 1px solid var(--rule); scroll-margin-top: 72px; }
+.conclusion h2 { margin-top: 12px; }
+.sources { max-width: 720px; margin: 64px auto 0; padding-top: 24px; border-top: 1px solid var(--rule); font: 15px/1.55 system-ui, sans-serif; scroll-margin-top: 72px; }
+.sources h3 { margin-top: 22px; }
+.sources li { overflow-wrap: anywhere; }
+.sources .cite { color: var(--muted); }
+.conclusion ul li { margin-bottom: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<nav class="topnav"><div class="wrap">
+  <a class="brand" href="./" aria-current="page">Future of War Timeline</a>
+  <a href="https://github.com/hillaryyang/future-of-war-timeline">Code</a>
+</div></nav>
+
+<div class="yearbar" id="yearbar">
+  <div class="yb-inner">
+    <div class="yb-year mono" id="yb-year" aria-live="off">1995</div>
+    <div class="yb-era" id="yb-era">Why war happens</div>
+    <div class="yb-track" id="yb-track" role="navigation" aria-label="Eras"></div>
+  </div>
+  <div class="dash-strip" id="dash-strip"><div class="in"></div></div>
+</div>
+
+<div class="layout">
+  <aside class="lanes" id="lanes" aria-hidden="true"></aside>
+
+  <main class="content" id="content">
+    <section class="hero">
+      <div class="kicker">BASES 6 Hour Challenge · Defense · October 24, 2026</div>
+      <h1>The Future of War, One Year at a Time</h1>
+      <p class="dek">A scrolling timeline from the theory of why war happens, through the asymmetries that matter today, to 2036, 2046 and the world after AGI. Every stop is sourced or labeled a projection. The key stops are simulations you can run.</p>
+      <div class="qs">
+        <div class="q"><div class="kicker">Question 1 · the 2026 era</div><p>What asymmetries in warfare are currently overlooked?</p></div>
+        <div class="q"><div class="kicker">Question 2 · 2036, 2046 and after</div><p>What will war and deterrence look like in 10 and 20 years? How will robotics and large models shape that future?</p></div>
+      </div>
+      <p class="meta">How to read it: the year bar at the top follows you. The lanes on the left show which domain each event belongs to. The panel on the right is a dashboard of five indicators that move with the year, and turn into projections after 2026.</p>
+      <div class="cue">Scroll to begin</div>
+    </section>
+
+    <div id="eras"></div>
+
+    <section class="conclusion" id="conclusion">
+      <div class="kicker">Conclusion</div>
+      <h2>Two answers and five signposts</h2>
+      <p><strong>Q1.</strong> The overlooked asymmetries today are not exotic. They are cost-exchange and stockpile depth, production capacity, supply-chain chokepoints, space, and the pairing of cyber with machine-speed intelligence. Each one rewards the side that can build, replace and adapt faster, not the side with the best single system. In 2026 that is a different list of countries than the one most defense planning assumes.</p>
+      <p><strong>Q2.</strong> A unified world is unlikely. The likely future is two or three rival powers with separate technology stacks, each able to deny the other. Robotics lowers the human cost of fighting, which shrinks the room for peaceful deals. Large models compress decision time and hide capability in software, which widens the information gap and sharpens the commitment problem. Deterrence survives, but it is measured in factory output, orbital restraint and the speed of machines rather than warhead counts alone.</p>
+      <p>Signposts that show which way the world is heading:</p>
+      <ul>
+        <li><strong>AI verification deals.</strong> Any agreement that lets rivals inspect each other's compute or models would show the information gap can be narrowed. None exists yet.</li>
+        <li><strong>Export-control escalation.</strong> Each new round of chip or rare-earth controls, in either direction, hardens the two-stack world.</li>
+        <li><strong>Interceptor rebuild rates.</strong> If Patriot and THAAD deliveries stay near 20 and zero a month, stockpile depth stays the binding constraint on US deterrence.</li>
+        <li><strong>Anti-satellite tests.</strong> A new debris-producing test would signal that at least one power no longer accepts mutual vulnerability in orbit.</li>
+        <li><strong>Major AI incidents.</strong> A documented case of an AI-recommended strike going wrong would force the first rules on human review time.</li>
+      </ul>
+    </section>
+
+    <section class="sources" id="sources">
+      <div class="kicker">Sources and method</div>
+      <h2>How this page was built</h2>
+      <p>Stations dated 2026 or earlier are facts with at least one source, or the team's own analysis marked as such. Stations dated 2036 or later are projections: arguments about where the sourced trends lead, not predictions. The dashboard's 1995 and 2026 values are our characterization of the record; everything after 2026 is a projection too.</p>
+      <p>The simulations are simplified teaching models. Constants marked <em>illustrative</em> are chosen so the mechanism is visible in a browser, not measured from data. Each simulation lists its assumptions under the controls.</p>
+      <div id="sourcelist"></div>
+    </section>
+  </main>
+
+  <aside class="dash" id="dash" aria-label="Year dashboard"></aside>
+</div>
+
+<footer><div class="wrap">
+  <p><strong>Disclaimer.</strong> The simulations on this page are simplified illustrative models built to show a mechanism. They are not military forecasts, and none of their numbers should be read as a prediction of any real conflict.</p>
+  <p>Built for the BASES 6 Hour Challenge. Code: <a href="https://github.com/hillaryyang/future-of-war-timeline">github.com/hillaryyang/future-of-war-timeline</a>.</p>
+</div></footer>
+
+<script>
+/* =====================================================================
+   CONTENT DATA. Edit text here. Layout and behavior live in the next block.
+   ===================================================================== */
+
+const ERAS = [
+  { id: "theory",  year: 1995, label: "Why war happens",                question: "Q2 foundation: the bargaining model of war" },
+  { id: "now",     year: 2026, label: "Now: overlooked asymmetries",    question: "Q1: what asymmetries in warfare are currently overlooked?" },
+  { id: "y2036",   year: 2036, label: "Two or three powers",            question: "Q2, 10 years out" },
+  { id: "y2046",   year: 2046, label: "Robots and large models",        question: "Q2, 20 years out" },
+  { id: "postagi", year: 2050, label: "After AGI",                      question: "Q2, beyond the horizon" }
+];
+// `postagi` uses 2050 only as a sort position; the year bar shows "After AGI".
+
+const DOMAINS = {
+  land:    { label: "Land",    short: "L",  css: "--dom-land" },
+  sea:     { label: "Sea",     short: "S",  css: "--dom-sea" },
+  air:     { label: "Air",     short: "A",  css: "--dom-air" },
+  space:   { label: "Space",   short: "Sp", css: "--dom-space" },
+  cyber:   { label: "Cyber",   short: "Cy", css: "--dom-cyber" },
+  ai:      { label: "AI",      short: "AI", css: "--dom-ai" },
+  nuclear: { label: "Nuclear", short: "N",  css: "--dom-nuclear" }
+};
+
+/* Sources. Stations refer to these by key. `group` controls the Sources section. */
+const SRC = {
+  fearon:   { group: "Theory", label: "Fearon 1995", url: "https://doi.org/10.1017/S0020818300033324", cite: "James D. Fearon, \"Rationalist Explanations for War,\" International Organization 49(3): 379–414" },
+  powell:   { group: "Theory", label: "Powell 2006", url: "https://doi.org/10.1017/S0020818306060061", cite: "Robert Powell, \"War as a Commitment Problem,\" International Organization 60(1): 169–203" },
+  unep:     { group: "Theory", label: "UNEP", url: "https://www.unep.org/ozonaction/who-we-are/about-montreal-protocol", cite: "About the Montreal Protocol" },
+
+  epc:      { group: "2026 evidence", label: "EPC", url: "https://www.epc.eu/publication/the-new-economics-of-warfare/", cite: "The new economics of warfare" },
+  stripes:  { group: "2026 evidence", label: "Stars and Stripes (CSIS)", url: "https://www.stripes.com/theaters/middle_east/2026-07-30/iran-war-missile-stockpiles-patriots-22406307.html", cite: "Iran war has consumed nearly 67% of US Patriot interceptor stockpile" },
+  cnn:      { group: "2026 evidence", label: "CNN", url: "https://www.cnn.com/2026/07/12/politics/us-weapon-stocks-depleted-iran-war", cite: "US weapon stocks remain depleted" },
+  iwc:      { group: "2026 evidence", label: "Irregular Warfare Center", url: "https://irregularwarfarecenter.org/publications/insights/six-key-lessons-from-ukraines-drone-war/", cite: "Six key lessons from Ukraine's drone war" },
+  hudson:   { group: "2026 evidence", label: "Hudson", url: "https://www.hudson.org/technology/ukraines-drone-war-rise-machine-speed-adaptive-hyperwar-can-kasapoglu", cite: "Ukraine's drone war" },
+  dnews:    { group: "2026 evidence", label: "Defense News", url: "https://www.defensenews.com/unmanned/2026/04/24/ukraine-to-field-25000-ground-robots-in-push-to-replace-soldiers-for-frontline-logistics/", cite: "Ukraine to field 25,000 ground robots" },
+  bdef:     { group: "2026 evidence", label: "Breaking Defense", url: "https://breakingdefense.com/2026/03/as-fury-production-starts-anduril-pledging-a-different-production-approach-at-arsenal-1/", cite: "Anduril Arsenal-1 Fury production" },
+  shield:   { group: "2026 evidence", label: "Shield AI", url: "https://shield.ai/shield-ai-signs-contract-with-taiwans-national-chung-shan-institute-of-science-and-technology-to-accelerate-and-indigenize-taiwan-developed-ai-pilots/", cite: "Contract with Taiwan's NCSIST" },
+  eenews:   { group: "2026 evidence", label: "eeNews Europe", url: "https://www.eenewseurope.com/en/helsing-ramps-up-drone-factories-across-europe", cite: "Helsing ramps up drone factories" },
+  techleap: { group: "2026 evidence", label: "Techleap", url: "https://finder.techleap.nl/news/feed/navy-awards-saronic-392m-contract-for-autonomous-surface-vessels", cite: "Navy awards Saronic $392M contract" },
+  lm1:      { group: "2026 evidence", label: "Lockheed Martin", url: "https://www.lockheedmartin.com/en-us/news/features/2026/Skunk-Works-Expands-Production-of-Lockheed-Martin-Vectis.html", cite: "Skunk Works expands Vectis" },
+  lm2:      { group: "2026 evidence", label: "Lockheed Martin (MATRIX)", url: "https://news.lockheedmartin.com/2026-03-23-Sikorsky-Completes-Integration-of-MATRIX-Autonomy-Suite-on-U-S-Armys-UH-60MX-Black-Hawk-R-Helicopter", cite: "MATRIX autonomy on the UH-60MX" },
+  spg:      { group: "2026 evidence", label: "S&P Global", url: "https://www.spglobal.com/energy/en/news-research/latest-news/metals/041526-drones-emerge-as-the-fastest-growing-ree-demand-segment", cite: "Drones and rare-earth demand" },
+  smm:      { group: "2026 evidence", label: "SMM", url: "https://news.metal.com/newscontent/103965490", cite: "China restricts exports to 10 US firms" },
+  barchart: { group: "2026 evidence", label: "Barchart", url: "https://www.barchart.com/story/news/691262/the-drone-revolutions-dependence-on-chinese-rare-earth-processing", cite: "Drone dependence on Chinese rare-earth processing" },
+  swj:      { group: "2026 evidence", label: "Small Wars Journal", url: "https://smallwarsjournal.com/2026/03/17/taiwan-t-dome-drone-warfare/", cite: "Taiwan's T-Dome" },
+  chinatalk:{ group: "2026 evidence", label: "ChinaTalk", url: "https://www.chinatalk.media/p/can-taiwan-build-drones", cite: "Can Taiwan build drones?" },
+  cdr:      { group: "2026 evidence", label: "Cyber Defense Review 2026", url: "https://cyberdefensereview.army.mil/Portals/6/Documents/2026-vol11-iss2/CDR_V11_N2_Hathaway.pdf", cite: "Hathaway, vol. 11 no. 2" },
+  ropes:    { group: "2026 evidence", label: "Ropes & Gray", url: "https://www.ropesgray.com/en/insights/viewpoints/2026/07/102n8jh/regulatory-frontier-cybersecurity-in-a-world-of-new-ai-models", cite: "Cybersecurity in a world of new AI models" },
+  navarra:  { group: "2026 evidence", label: "University of Navarra", url: "https://en.unav.edu/web/global-affairs/undersea-cable-sabotages-russia-s-and-china-s-hybrid-warfare-strategy", cite: "Undersea cable sabotage" },
+  bloomberg:{ group: "2026 evidence", label: "Bloomberg", url: "https://www.bloomberg.com/news/articles/2026-06-25/pentagon-sees-broader-role-for-ai-in-setting-military-targets", cite: "Pentagon AI targeting doctrine" },
+  dscoop1:  { group: "2026 evidence", label: "DefenseScoop", url: "https://defensescoop.com/2026/10/08/senate-bill-expand-dod-oversight-commercial-frontier-ai-models/", cite: "Senate bill on frontier AI oversight" },
+  dscoop2:  { group: "2026 evidence", label: "DefenseScoop (Marines 2040)", url: "https://defensescoop.com/2026/08/27/marine-corps-bets-on-techy-but-human-centric-ground-warfare/", cite: "Marine Corps ground warfare 2040" },
+  kherald:  { group: "2026 evidence", label: "Korea Herald", url: "https://www.koreaherald.com/article/10904194", cite: "Battlefield tactics in 2040" },
+  aca:      { group: "2026 evidence", label: "Arms Control Association", url: "https://www.armscontrol.org/act/2026-09/focus/ai-and-nuclear-balance-terror", cite: "AI and the nuclear balance of terror" },
+  acouncil: { group: "2026 evidence", label: "Atlantic Council", url: "https://www.atlanticcouncil.org/content-series/the-big-story/the-coming-compute-war-in-ukraine/", cite: "The coming compute war" },
+  nasa:     { group: "2026 evidence", label: "NASA ODPO", url: "https://orbitaldebris.jsc.nasa.gov/", cite: "NASA Orbital Debris Program Office (added by builder for anti-satellite debris counts)" },
+  starlink: { group: "2026 evidence", label: "Starlink in Ukraine", url: "https://en.wikipedia.org/wiki/Starlink_in_the_Russian-Ukrainian_war", cite: "Starlink in the Russian-Ukrainian war, overview with references (added by builder)" },
+
+  rand25:   { group: "After AGI", label: "RAND (Mitre 2025)", url: "https://www.rand.org/pubs/testimonies/CTA3914-1.html", cite: "AGI's five hard national security problems" },
+  hsw:      { group: "After AGI", label: "Hendrycks, Schmidt and Wang 2025", url: "https://arxiv.org/html/2503.05628v1", cite: "Superintelligence Strategy" },
+  rand26:   { group: "After AGI", label: "RAND 2026", url: "https://www.rand.org/content/dam/rand/pubs/perspectives/PEA4300/PEA4347-1/RAND_PEA4347-1.pdf", cite: "The AGI Rideout Strategy" },
+  lowy:     { group: "After AGI", label: "Lowy Institute", url: "https://www.lowyinstitute.org/the-interpreter/nuclear-fallacy-why-deterrence-can-t-stop-agi-arms-race", cite: "The nuclear fallacy" },
+  perry:    { group: "After AGI", label: "Perry World House", url: "https://perryworldhouse.upenn.edu/news-and-insight/international-security-and-artificial-general-intelligence/", cite: "International security and AGI" }
+};
+
+/* Stations. status: "fact" | "analysis" | "projection". Every station dated 2036+ is a projection. */
+const STATIONS = [
+  /* ---------------- Era 0 · 1995 · Why war happens ---------------- */
+  { id: "fearon", era: "theory", year: 1995, domains: [], status: "fact",
+    title: "War is a failed bargain",
+    body: [
+      "War destroys value, so a deal both sides should prefer to fighting always exists. If side A would win with probability p and the two sides pay costs c_A and c_B to fight, any split x of the prize with p − c_A < x < p + c_B leaves both better off than war.",
+      "Rational states still fight for three reasons: private information with incentives to bluff about strength and resolve, commitment problems where a deal cannot be trusted to hold, and issues treated as indivisible so no split is possible.",
+      "Drag the offer below into and out of the shaded zone. Everything on this page is a variation on what moves the edges of that zone."
+    ],
+    sources: ["fearon"], sim: "bargaining" },
+
+  { id: "powell", era: "theory", year: 2006, domains: [], status: "fact",
+    title: "Fast power shifts cause preventive war",
+    body: [
+      "When power shifts quickly, the side that is declining cannot trust any deal, because tomorrow's stronger rival can demand more. Promises made today are not credible tomorrow.",
+      "If the shift is large relative to the costs of fighting, the declining side may prefer to fight now while it still can. That is the commitment problem in its sharpest form.",
+      "Turn on the power-shift toggle in the bargaining model above to see the two periods' deal zones pull apart."
+    ],
+    sources: ["powell"], sim: null, link: { sim: "bargaining", action: "enableShift", text: "Open the power-shift toggle" } },
+
+  { id: "ai-mechanisms", era: "theory", year: 2026, domains: ["ai"], status: "analysis",
+    title: "AI makes all three causes worse",
+    body: [
+      "Capability now hides in software and model weights, so rivals know less about each other's real strength. That widens the private-information gap.",
+      "Compute can shift the balance of power in years rather than decades, which sharpens the commitment problem Powell describes.",
+      "Chips and Taiwan are treated as all-or-nothing prizes, which is indivisibility. The rest of this page is about what those three pressures do to deterrence."
+    ],
+    sources: ["cdr", "acouncil"], sim: null },
+
+  /* ---------------- Era 1 · 2026 · Now ---------------- */
+  { id: "cost-exchange", era: "now", year: 2026, domains: ["air"], status: "fact",
+    title: "A $30,000 drone forces a $4 million answer",
+    body: [
+      "Shahed-type attack drones cost about $20,000–50,000 each. The Patriot interceptor that answers one costs about $4 million, and a THAAD interceptor $12–15 million.",
+      "In the Iran war, two AN/TPY-2 radars, which can cost over $1 billion, were disabled by drones costing about $30,000 each.",
+      "The model below runs the exchange for thirty days. Switch the interceptor to a cheap interceptor drone and watch the ratio collapse: that is Ukraine's answer."
+    ],
+    sources: ["epc"], sim: "costExchange" },
+
+  { id: "stockpiles", era: "now", year: 2026, domains: ["air"], status: "fact",
+    title: "Fired in months, rebuilt in years",
+    body: [
+      "The Iran war used about two-thirds of US Patriot interceptors, leaving 759–827. THAAD inventory fell from 452 to 234–278.",
+      "Deliveries run about 20 Patriots and 15 Tomahawks a month, with no THAAD deliveries forecast in 2026. Rebuilding to prewar levels takes 3+ years.",
+      "The chart below drains a stockpile at wartime rates and then rebuilds it at delivery rates. The two slopes are the asymmetry."
+    ],
+    sources: ["stripes", "cnn"], sim: "stockpile" },
+
+  { id: "ukraine-mass", era: "now", year: 2026, domains: ["air"], status: "fact",
+    title: "Adaptation speed beats exquisite hardware",
+    body: [
+      "Ukraine went from 7 drone makers in 2022 to at least 500, with projected capacity of 7 million drones a year.",
+      "In March 2026 about 70% of Shahed interceptions used Ukraine's own interceptor drones rather than missiles.",
+      "The loop from idea to front line runs in weeks. That cadence, not any single platform, is what the larger militaries have not matched."
+    ],
+    sources: ["iwc", "hudson"], sim: null },
+
+  { id: "ground-robots", era: "now", year: 2026, domains: ["land"], status: "fact",
+    title: "Robots take over the front-line supply run",
+    body: [
+      "Ukraine planned to contract 25,000 ground robots in the first half of 2026 and ran more than 9,000 robot missions in March alone, most of them carrying supplies and casualties.",
+      "The stated goal is 100% of front-line logistics done by machines. The first job robots take is not fighting but the drive that gets people killed."
+    ],
+    sources: ["dnews"], sim: null },
+
+  { id: "robot-makers", era: "now", year: 2026, domains: ["air", "sea"], status: "fact",
+    title: "The new robot arsenal",
+    body: [
+      "A new industrial base is forming around autonomy, and its numbers are still small compared with what Ukraine fields in a month."
+    ],
+    cards: [
+      { h: "Anduril", p: "Fury collaborative combat aircraft built at Arsenal-1, up to 150 a year." },
+      { h: "Shield AI", p: "Hivemind AI pilot, also contracted by Taiwan's NCSIST." },
+      { h: "Helsing", p: "HX-2 strike drone; factories across Europe rated at 1,000 a month." },
+      { h: "Saronic", p: "$392M US Navy order for Corsair autonomous boats." },
+      { h: "Lockheed Martin", p: "Self-funding five Vectis stealth drones." },
+      { h: "Sikorsky (Lockheed)", p: "Flying Black Hawks with no crew using the MATRIX autonomy suite." }
+    ],
+    sources: ["bdef", "shield", "eenews", "techleap", "lm1", "lm2"], sim: null },
+
+  { id: "still-physical", era: "now", year: 2026, domains: ["land"], status: "analysis",
+    title: "Why war is still so physical",
+    body: [
+      "Today's wars are proxy wars where no two superpowers try to win outright. The bottleneck is building things: advanced systems exist in small numbers, so cheap mass wins on cost.",
+      "Russia spends down Soviet-era stock while the US buys new systems at peacetime rates. The cost-exchange and stockpile stations above are two views of the same constraint.",
+      "The model below pits a few expensive units against many cheap ones. Change only the cheap side's daily production and watch the winner flip."
+    ],
+    sources: [], sim: "massVsExquisite" },
+
+  { id: "chokepoints", era: "now", year: 2026, domains: ["land"], status: "fact",
+    title: "Every drone runs on Chinese magnets",
+    body: [
+      "China controls about 94% of permanent-magnet production. In June 2026 it put export controls on 10 US firms, including drone makers.",
+      "A US ban on Chinese-origin rare earths in weapons starts January 1, 2027, which forces the question of what replaces them.",
+      "The chain below follows a magnet from mine to drone. The narrowest step, not the total mined, sets the limit."
+    ],
+    sources: ["spg", "smm", "barchart"], sim: "chokepoint" },
+
+  { id: "factory-scale", era: "now", year: 2026, domains: ["air"], status: "fact",
+    title: "A billion drones a year",
+    body: [
+      "Chinese manufacturers could reportedly retool to make almost a billion weaponized drones a year. Taiwan's target is 200,000.",
+      "The gap is not technology. It is factory floor, and factory floor is the hardest thing to build in a hurry."
+    ],
+    sources: ["swj", "chinatalk"], sim: null },
+
+  { id: "space", era: "now", year: 2026, domains: ["space"], status: "fact", alsoAnalysis: true,
+    title: "Space: attack is easy, defense is nearly impossible",
+    body: [
+      "Satellites carry communications, navigation and intelligence; Starlink in Ukraine showed how much one constellation can matter. Anti-satellite tests create debris that stays in orbit for years, and real tests have each produced more than a thousand trackable fragments.",
+      "Our read: because satellites can barely be defended, the only stable posture is mutual vulnerability. Hit mine and I hit yours.",
+      "A debris cascade, the Kessler syndrome, can make key orbits unusable for decades, so the attacker also hurts itself. Run the model below with retaliation on to see that self-damage."
+    ],
+    sources: ["nasa", "starlink"], sim: "orbital" },
+
+  { id: "cyber", era: "now", year: 2026, domains: ["cyber"], status: "fact",
+    title: "Four hours from flaw to exploit",
+    body: [
+      "Frontier AI cut the time from finding a software flaw to exploiting it from about 60 days to about 4 hours.",
+      "A Chinese open-weight model reportedly matched the best closed models at finding flaws. Defenders still patch on human schedules while attackers now move on machine ones."
+    ],
+    sources: ["cdr", "ropes"], sim: "cyberWindow" },
+
+  { id: "signal", era: "now", year: 2026, domains: ["ai"], status: "analysis",
+    title: "Reading a rival like a trader reads the market",
+    body: [
+      "A trading firm infers a rival's strategy from its trades. States can infer a leader's real goals from satellite imagery, troop movements and behavior that looks irrational.",
+      "Better inference shrinks Fearon's private-information gap, which should make deals easier. It can also make a first strike easier to plan.",
+      "Below, pick an intelligence source each turn and watch your belief about a rival's hidden goal update. Better sources reach confidence in fewer turns."
+    ],
+    sources: [], sim: "signal" },
+
+  { id: "cables", era: "now", year: 2026, domains: ["sea"], status: "fact",
+    title: "The internet runs on cables anyone can cut",
+    body: [
+      "About 600 undersea cables carry nearly 99% of intercontinental internet traffic and $10 trillion in daily transactions.",
+      "Cable cuts near the Baltic states and Taiwan have been cheap and deniable. A dragged anchor is hard to tell from an attack, and that ambiguity is the point."
+    ],
+    sources: ["navarra"], sim: null },
+
+  { id: "ai-targeting", era: "now", year: 2026, domains: ["ai"], status: "fact",
+    title: "AI starts to pick targets",
+    body: [
+      "Revised Pentagon doctrine envisions systems where AI initiates actions with human monitoring rather than human approval.",
+      "Research on AI models acting as decision-makers finds they lean toward rapid escalation under time pressure. The human is moving from inside the loop to the sidelines."
+    ],
+    sources: ["bloomberg", "dscoop1"], sim: null },
+
+  /* ---------------- Era 2 · 2036 ---------------- */
+  { id: "no-unity", era: "y2036", year: 2036, domains: [], status: "projection",
+    title: "The world does not unite",
+    body: [
+      "No single power can rule the rest. The US leads in AI, China leads in manufacturing and robotics, and each can deny the other what it lacks.",
+      "Unity happens only for narrow, cheap, verifiable problems. The 1987 Montreal Protocol is the model: universal ratification and about 98% of ozone-depleting substances phased out. War is none of those things."
+    ],
+    sources: ["unep"], sim: null },
+
+  { id: "two-stacks", era: "y2036", year: 2036, domains: ["ai"], status: "projection",
+    title: "Two chip worlds",
+    body: [
+      "A US and allied chip and AI stack, and a separate Chinese stack, each developing on its own path.",
+      "Export controls run in both directions, starting from the June 2026 rare-earth controls, and each round hardens the split. By 2036 the two stacks barely interoperate."
+    ],
+    sources: ["smm"], sim: null },
+
+  { id: "factory-deterrence", era: "y2036", year: 2036, domains: ["land"], status: "projection",
+    title: "Deterrence is measured in factory output",
+    body: [
+      "Whoever can replace losses fastest deters best. Stockpile depth and production rate join nuclear forces as the measure of strength.",
+      "The model below opens on a 2036 preset: cheap-unit production at factory scale. Compare it with the 2026 defaults."
+    ],
+    sources: [], sim: "massVsExquisite", simOpts: { preset: "2036" } },
+
+  { id: "space-mad", era: "y2036", year: 2036, domains: ["space"], status: "projection",
+    title: "Mutually assured satellite destruction",
+    body: [
+      "Both blocs hold each other's satellites at risk. Neither strikes first because the debris would blind both.",
+      "The model below opens with two large constellations and retaliation on. Strike, and count what the attacker has left."
+    ],
+    sources: [], sim: "orbital", simOpts: { preset: "twoBlocs" } },
+
+  { id: "gray-zone", era: "y2036", year: 2036, domains: ["cyber", "sea"], status: "projection",
+    title: "War below the threshold",
+    body: [
+      "Cable cuts, cyber intrusions and influence campaigns become routine because they are cheap and deniable.",
+      "Each stays below the level that triggers a military response. The result is a war that never starts and never ends."
+    ],
+    sources: [], sim: null },
+
+  /* ---------------- Era 3 · 2046 ---------------- */
+  { id: "robots-maneuver", era: "y2046", year: 2046, domains: ["land"], status: "projection",
+    title: "Robots do the fighting",
+    body: [
+      "The Marine Corps' 2040 ground concept already says robots will in some cases fully replace maneuver units.",
+      "South Korea plans a manned-unmanned force by 2040 because its pool of personnel is shrinking. Demographics, not doctrine, drive the shift."
+    ],
+    sources: ["dscoop2", "kherald"], sim: null },
+
+  { id: "cheaper-war", era: "y2046", year: 2046, domains: ["land"], status: "projection",
+    title: "When robots fight, war gets cheaper to start",
+    body: [
+      "Fewer human casualties lower each side's cost of war, c_A and c_B. The bargaining range has width c_A + c_B, so it shrinks, and war becomes easier to choose.",
+      "Move the robotic share below and watch the zone of acceptable deals close."
+    ],
+    sources: [], sim: "robotsCost" },
+
+  { id: "machine-speed", era: "y2046", year: 2046, domains: ["ai", "nuclear"], status: "projection",
+    title: "Decisions at machine speed",
+    body: [
+      "Large models run planning, intelligence and cyber operations. Less time to decide, plus automation bias and escalation-prone AI advice, raise the chance of accidental war, including nuclear war.",
+      "The model below runs ten thousand crises and counts how many end by mistake."
+    ],
+    sources: ["aca", "dscoop1"], sim: "escalation" },
+
+  /* ---------------- Era 4 · After AGI ---------------- */
+  { id: "agi-problems", era: "postagi", year: 2050, domains: ["ai"], status: "projection",
+    title: "Five hard problems",
+    body: [
+      "RAND lists five: a sudden wonder weapon, a systemic shift in power, a \"malicious mentor\" for weapons of mass destruction, AI with its own agency, and instability during the race itself.",
+      "None has a precedent in arms control, and several could arrive at once."
+    ],
+    sources: ["rand25"], sim: null },
+
+  { id: "commitment-total", era: "postagi", year: 2050, domains: ["ai"], status: "projection",
+    title: "The commitment problem becomes total",
+    body: [
+      "If the first state to AGI pulls away for good, the trailing state faces act-now-or-never. Critics at the Lowy Institute argue this makes a nuclear-style stalemate impossible.",
+      "Others at Perry World House say first-mover gains are overstated and any lead would erode. Which view is right decides whether deterrence survives at all."
+    ],
+    sources: ["lowy", "perry"], sim: null },
+
+  { id: "maim", era: "postagi", year: 2050, domains: ["ai", "cyber"], status: "projection",
+    title: "Mutual Assured AI Malfunction",
+    body: [
+      "Any bid for AI dominance is met with preventive sabotage, from cyberattacks to strikes on data centers. Hendrycks, Schmidt and Wang call this Mutual Assured AI Malfunction.",
+      "RAND's 2026 AGI Rideout strategy instead hardens AI development so no one fears falling behind for good. The model below lets you try both."
+    ],
+    sources: ["hsw", "rand26"], sim: "agiRace" },
+
+  { id: "post-ubi", era: "postagi", year: 2050, domains: [], status: "projection",
+    title: "Does abundance end war?",
+    body: [
+      "Even with universal basic income, conflict continues through social and psychological warfare, concentrated power, and possibly a return to low-tech or guerrilla fighting.",
+      "Abundance removes one reason to fight and leaves the others. The bargaining model has no term for plenty."
+    ],
+    sources: [], sim: null }
+];
+
+/* Dashboard: five indicators stored as levels 0–4, interpolated between keyframes. */
+const DASH_LABELS = {
+  deterrence: ["Collapsed", "Fragile", "Strained", "Stable", "Robust"],
+  robotic:    ["None", "Low", "Moderate", "High", "Dominant"],
+  orbit:      ["Clear", "Busy", "Crowded", "Congested", "Cascading"],
+  decision:   ["Days", "Hours", "Minutes", "Seconds", "Machine speed"],
+  powers:     null
+};
+const DASH_NAMES = { deterrence: "Deterrence", robotic: "Robotic share", orbit: "Orbit", decision: "Decision time", powers: "Powers" };
+const DASH_ORDER = ["deterrence", "robotic", "powers", "orbit", "decision"];
+const DASH_KEYFRAMES = [
+  { year: 1995, deterrence: 3, robotic: 0, orbit: 1, decision: 1, powers: 1 },
+  { year: 2026, deterrence: 2, robotic: 1, orbit: 2, decision: 2, powers: 3 },
+  { year: 2036, deterrence: 2, robotic: 2, orbit: 3, decision: 3, powers: 2 },
+  { year: 2046, deterrence: 1, robotic: 3, orbit: 3, decision: 4, powers: 2 },
+  { year: 2050, deterrence: 1, robotic: 4, orbit: 3, decision: 4, powers: 2 }
+];
+</script>
+<script>
+
+/* =====================================================================
+   MODEL MATH. Pure functions, no DOM. Each simulation's UI calls these.
+   ===================================================================== */
+const MODEL = {};
+
+/* 5.1 / 5.9 Fearon bargaining range */
+MODEL.bargain = function (p, cA, cB) {
+  return { lo: p - cA, hi: p + cB, width: cA + cB };
+};
+
+/* 5.2 cost exchange */
+MODEL.costExchange = function (o) {
+  const ratio = (o.perDrone * o.interceptorCost) / o.droneCost;
+  const dailyDef = o.dronesPerDay * o.perDrone * o.interceptorCost;
+  const dailyAtt = o.dronesPerDay * o.droneCost;
+  const budgetDay = dailyDef > 0 ? o.budget / dailyDef : Infinity;
+  const att = [], def = [];
+  for (let d = 0; d <= 30; d++) { att.push([d, dailyAtt * d]); def.push([d, dailyDef * d]); }
+  return { ratio, dailyDef, dailyAtt, budgetDay, att, def };
+};
+
+/* 5.3 stockpile */
+MODEL.stockpile = function (o) {
+  const S = [o.start];
+  let zero = null;
+  for (let t = 0; t < 48; t++) {
+    const fired = t < o.warMonths ? o.fire : 0;
+    const next = Math.max(0, S[t] - fired + o.prod);
+    if (zero === null && next === 0 && fired > 0) zero = t + 1;
+    S.push(next);
+  }
+  const endWar = S[Math.min(o.warMonths, 48)];
+  let rebuild;
+  if (endWar >= o.start) rebuild = 0;
+  else if (o.prod > 0) rebuild = Math.ceil((o.start - endWar) / o.prod);
+  else rebuild = Infinity;
+  return { S, zero, endWar, rebuild, min: Math.min(...S) };
+};
+
+/* 5.4 orbital debris. Constants are illustrative teaching values. */
+MODEL.orbitalConst = { k: 1e-6, f: 25, kd: 1.25e-8, fd: 100, F: 1500, D0: 5000, lambda: { 400: 0.3, 800: 0.05 } };
+MODEL.orbitalThreshold = function (SA, SB, lam) {
+  const c = MODEL.orbitalConst;
+  const num = lam - c.k * c.f * (SA + SB);
+  return num > 0 ? num / (c.kd * c.fd) : 0; // 0 = unstable at any debris level
+};
+MODEL.orbitalInit = function (N, alt) {
+  return { SA: N, SB: N, N, D: MODEL.orbitalConst.D0, alt, month: 0, hist: [[0, MODEL.orbitalConst.D0]], hA: [[0, N]], hB: [[0, N]], queue: [], events: [], halfA: null, halfB: null, lossesA: 0, lossesB: 0 };
+};
+/* Immediate strike: `by` destroys n of the other side's satellites. */
+MODEL.orbitalStrike = function (st, by, n) {
+  const c = MODEL.orbitalConst;
+  const tgt = by === "A" ? "SB" : "SA";
+  const destroyed = Math.min(n, Math.floor(st[tgt]));
+  st[tgt] -= destroyed;
+  st.D += destroyed * c.F;
+  st.events.push({ month: st.month, by, n: destroyed });
+  return destroyed;
+};
+MODEL.orbitalStep = function (st) {
+  if (st.month >= 120) return false;
+  const c = MODEL.orbitalConst;
+  const lam = c.lambda[st.alt];
+  // queued retaliation fires at the start of the step
+  while (st.queue.length) { const q = st.queue.shift(); MODEL.orbitalStrike(st, q.by, q.n); }
+  const S = st.SA + st.SB;
+  const loss = c.k * st.D * S;
+  const lossA = S > 0 ? loss * st.SA / S : 0, lossB = S > 0 ? loss * st.SB / S : 0;
+  const dD = c.kd * c.fd * st.D * st.D + c.k * c.f * st.D * S - lam * st.D;
+  st.SA = Math.max(0, st.SA - lossA);
+  st.SB = Math.max(0, st.SB - lossB);
+  st.lossesA += lossA; st.lossesB += lossB;
+  st.D = Math.min(1e9, Math.max(0, st.D + dD));
+  st.month++;
+  st.hist.push([st.month, st.D]); st.hA.push([st.month, st.SA]); st.hB.push([st.month, st.SB]);
+  if (st.halfA === null && st.SA <= st.N / 2) st.halfA = st.month;
+  if (st.halfB === null && st.SB <= st.N / 2) st.halfB = st.month;
+  return true;
+};
+
+/* 5.6 mass vs exquisite: Lanchester square law plus production */
+MODEL.mass = function (o, days = 120) {
+  let E = o.E0, M = o.M0;
+  const hE = [[0, E]], hM = [[0, M]];
+  let winner = null, day = null;
+  for (let d = 1; d <= days; d++) {
+    const nE = Math.max(0, E - o.aM * M + o.pE);
+    const nM = Math.max(0, M - o.aE * E + o.pM);
+    E = nE; M = nM;
+    hE.push([d, E]); hM.push([d, M]);
+    if (E <= 0 && M <= 0) { winner = "draw"; day = d; break; }
+    if (E <= 0) { winner = "cheap"; day = d; break; }
+    if (M <= 0) { winner = "advanced"; day = d; break; }
+  }
+  return { hE, hM, winner, day, spendE: o.pE * o.costE, spendM: o.pM * o.costM };
+};
+MODEL.massTipping = function (o) {
+  // smallest cheap-side production (step 5) at which the cheap side wins within 120 days
+  for (let pM = 0; pM <= 1000; pM += 5) {
+    const r = MODEL.mass(Object.assign({}, o, { pM }));
+    if (r.winner === "cheap") return pM;
+  }
+  return null;
+};
+
+/* 5.7 chokepoint */
+MODEL.chokepoint = function (nodes, ban, stockMonths) {
+  const shares = nodes.filter(n => n.share != null).map(n => n.share);
+  const maxShare = Math.max(...shares);
+  const floor = (100 - maxShare) / 100;
+  const pts = [];
+  for (let t = 0; t <= 36; t++) pts.push([t, (!ban || t < stockMonths) ? 1 : floor]);
+  const bottleneck = nodes.findIndex(n => n.share === maxShare);
+  return { pts, floor, bottleneck };
+};
+
+/* 5.8 cyber window */
+MODEL.cyberWindow = function (patchDays, systems) {
+  const before = Math.max(0, patchDays - 60);
+  const after = Math.max(0, patchDays - 4 / 24);
+  return { before, after, sysBefore: before * systems, sysAfter: after * systems };
+};
+
+/* 5.9 robots shrink the range */
+MODEL.robotCost = function (cMoney, cHuman, r) { return cMoney + cHuman * (1 - r); };
+
+/* 5.10 escalation: closed form for the curve; Monte Carlo (chunked) for the headline number */
+MODEL.escConst = { n: 20, tau: 10, a0: 0.5 };
+MODEL.escClosed = function (T, b, q) {
+  const c = MODEL.escConst;
+  const act = Math.min(1, c.a0 * (1 + b));
+  const perAlert = q * Math.exp(-T / c.tau) * act;
+  return 1 - Math.pow(1 - perAlert, c.n);
+};
+MODEL.escChunk = function (T, b, q, trials, rng) {
+  const c = MODEL.escConst;
+  const act = Math.min(1, c.a0 * (1 + b));
+  const catchP = 1 - Math.exp(-T / c.tau);
+  let wars = 0;
+  for (let i = 0; i < trials; i++) {
+    for (let j = 0; j < c.n; j++) {
+      if (rng() < q && rng() >= catchP && rng() < act) { wars++; break; }
+    }
+  }
+  return wars;
+};
+
+/* 5.11 AGI race */
+MODEL.agiInit = function () {
+  return { pA: 0, pB: 0, step: 0, hA: [[0, 0]], hB: [[0, 0]], tension: 0, events: [], outcome: null, throttled: false };
+};
+MODEL.agiStep = function (st, o, rng) {
+  if (st.outcome) return false;
+  const gauss = () => { let u = 0, v = 0; while (u === 0) u = rng(); while (v === 0) v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const sEff = o.rideout ? o.s * 0.5 : o.s;
+  const lossEff = o.rideout ? o.loss * 0.5 : o.loss;
+  // Credible deterrence: the trailer can see (v), can succeed (s) and is willing (loss > cost).
+  const credible = o.v * sEff * (lossEff > o.cost ? 1 : 0);
+  st.throttled = credible >= 0.5;
+  const mult = st.throttled ? 0.25 : 1;
+  st.pA += (o.rA + gauss() * 0.6) * mult;
+  st.pB += (o.rB + gauss() * 0.6) * mult;
+  st.pA = Math.max(0, st.pA); st.pB = Math.max(0, st.pB);
+  // trailing state observes the leader
+  const leader = st.pA >= st.pB ? "A" : "B";
+  const trueLead = Math.abs(st.pA - st.pB);
+  const observed = rng() < o.v ? trueLead : Math.max(0, trueLead + gauss() * 15);
+  if (observed > o.Lstar) {
+    const expectedLoss = lossEff * Math.min(1, observed / 50);
+    if (expectedLoss > o.cost) {
+      const ok = rng() < sEff;
+      if (ok) { if (leader === "A") st.pA *= 0.7; else st.pB *= 0.7; }
+      st.tension += 1;
+      st.events.push({ step: st.step + 1, by: leader === "A" ? "B" : "A", target: leader, ok });
+    }
+  }
+  st.tension = Math.max(0, st.tension - 0.03);
+  st.step++;
+  st.hA.push([st.step, st.pA]); st.hB.push([st.step, st.pB]);
+  if (st.tension >= 6) st.outcome = "Open conflict";
+  else if (st.pA >= 100) st.outcome = "A reaches AGI";
+  else if (st.pB >= 100) st.outcome = "B reaches AGI";
+  else if (st.step >= 120) st.outcome = "Mutual restraint";
+  return true;
+};
+
+/* Seeded RNG so the checked cases reproduce. */
+MODEL.rng = function (seed) {
+  let s = seed >>> 0 || 1;
+  return function () { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+};
+
+/* =====================================================================
+   UI HELPERS
+   ===================================================================== */
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let UID = 0;
+
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k === "html") e.innerHTML = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat(Infinity)) { if (k == null || k === false) continue; e.append(k.nodeType ? k : document.createTextNode(String(k))); }
+  return e;
+}
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function alpha(color, a) {
+  const m = /^#([0-9a-f]{6})$/i.exec(color);
+  if (!m) return color;
+  const v = parseInt(m[1], 16);
+  return `rgba(${(v >> 16) & 255},${(v >> 8) & 255},${v & 255},${a})`;
+}
+const fmt = {
+  money(n) {
+    const abs = Math.abs(n);
+    if (abs >= 1e9) return "$" + trim((n / 1e9).toFixed(2)) + "B";
+    if (abs >= 1e6) return "$" + trim((n / 1e6).toFixed(2)) + "M";
+    if (abs >= 1e3) return "$" + trim((n / 1e3).toFixed(1)) + "k";
+    return "$" + Math.round(n);
+  },
+  int(n) { return Math.round(n).toLocaleString("en-US"); },
+  pct(x, d = 0) { return (x * 100).toFixed(d) + "%"; },
+  num(n, d = 2) { return (+n).toFixed(d); }
+};
+function trim(s) { return s.replace(/\.?0+$/, ""); }
+function short(n) {
+  const a = Math.abs(n);
+  if (a >= 1e9) return trim((n / 1e9).toFixed(1)) + "B";
+  if (a >= 1e6) return trim((n / 1e6).toFixed(1)) + "M";
+  if (a >= 1e3) return trim((n / 1e3).toFixed(1)) + "k";
+  return String(Math.round(n * 100) / 100);
+}
+function ticks(min, max, n) {
+  const span = max - min; if (span <= 0) return [min];
+  const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), norm = raw / mag;
+  const step = (norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10) * mag;
+  const out = [];
+  for (let v = Math.ceil(min / step) * step; v <= max + step * 1e-6; v += step) out.push(+v.toFixed(10));
+  return out;
+}
+
+/* Controls */
+function slider(o) {
+  const id = "c" + (++UID);
+  const log = !!o.log;
+  const out = h("output", { for: id });
+  const input = h("input", { type: "range", id, min: log ? Math.log(o.min) : o.min, max: log ? Math.log(o.max) : o.max, step: log ? 0.01 : o.step, value: log ? Math.log(o.value) : o.value, "aria-label": o.label });
+  const el = h("div", { class: "ctl" }, h("label", { for: id }, o.label), out, input);
+  const get = () => log ? Math.exp(+input.value) : +input.value;
+  const render = () => { out.textContent = (o.format || String)(get()); };
+  input.addEventListener("input", () => { render(); o.onInput && o.onInput(get()); });
+  render();
+  return { el, input, get, set(v) { input.value = log ? Math.log(v) : v; render(); }, disable(d) { input.disabled = d; el.classList.toggle("disabled", d); } };
+}
+function selectCtl(o) {
+  const id = "c" + (++UID);
+  const sel = h("select", { id }, o.options.map(op => h("option", { value: op.value, selected: op.value === o.value }, op.label)));
+  const el = h("div", { class: "ctl" }, h("label", { for: id }, o.label), h("span"), sel);
+  sel.addEventListener("change", () => o.onChange && o.onChange(sel.value));
+  return { el, get: () => sel.value, set(v) { sel.value = v; } };
+}
+function checkCtl(o) {
+  const id = "c" + (++UID);
+  const input = h("input", { type: "checkbox", id, checked: !!o.value });
+  const el = h("div", { class: "ctl check" }, input, h("label", { for: id }, o.label));
+  input.addEventListener("change", () => o.onChange && o.onChange(input.checked));
+  return { el, get: () => input.checked, set(v) { input.checked = v; } };
+}
+function button(label, onClick, primary) { return h("button", { class: "btn" + (primary ? " primary" : ""), type: "button", onclick: onClick }, label); }
+
+/* Canvas with DPR scaling and resize hook */
+function makeCanvas(parent, height, label) {
+  const c = h("canvas", { class: "plot", role: "img", "aria-label": label });
+  parent.append(c);
+  const ctx = c.getContext("2d");
+  const cv = { c, ctx, W: 0, H: height, resize, onResize(fn) { cv._fn = fn; } };
+  function resize() {
+    const w = c.clientWidth || parent.clientWidth || 600;
+    const dpr = window.devicePixelRatio || 1;
+    cv.W = w; cv.H = height;
+    c.width = Math.round(w * dpr); c.height = Math.round(height * dpr);
+    c.style.height = height + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  if (window.ResizeObserver) {
+    let pending = 0;
+    new ResizeObserver(() => { if (pending) return; pending = requestAnimationFrame(() => { pending = 0; const w = c.clientWidth; if (w && Math.abs(w - cv.W) > 1) { resize(); cv._fn && cv._fn(); } }); }).observe(c);
+  }
+  return cv;
+}
+
+/* Generic line chart */
+function lineChart(cv, o) {
+  const { ctx, W, H } = cv;
+  const pad = { l: 54, r: 14, t: 18, b: 32 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+  const xMin = o.xMin || 0, yMin = o.yMin || 0, xMax = o.xMax, yMax = o.yMax > yMin ? o.yMax : yMin + 1;
+  const X = x => pad.l + (x - xMin) / (xMax - xMin) * pw, Y = y => pad.t + ph - (y - yMin) / (yMax - yMin) * ph;
+  const fg = cssVar("--fg"), muted = cssVar("--muted"), rule = cssVar("--rule");
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "11px system-ui, sans-serif"; ctx.lineWidth = 1;
+  for (const t of ticks(yMin, yMax, 4)) {
+    ctx.strokeStyle = rule; ctx.beginPath(); ctx.moveTo(pad.l, Y(t)); ctx.lineTo(W - pad.r, Y(t)); ctx.stroke();
+    ctx.fillStyle = muted; ctx.textAlign = "right"; ctx.fillText((o.yFmt || short)(t), pad.l - 6, Y(t) + 4);
+  }
+  for (const t of ticks(xMin, xMax, Math.min(6, Math.max(2, Math.floor(pw / 70))))) {
+    ctx.fillStyle = muted; ctx.textAlign = "center"; ctx.fillText((o.xFmt || String)(t), X(t), H - pad.b + 16);
+  }
+  if (o.xLabel) { ctx.fillStyle = muted; ctx.textAlign = "right"; ctx.fillText(o.xLabel, W - pad.r, H - 4); }
+  if (o.yLabel) { ctx.fillStyle = muted; ctx.textAlign = "left"; ctx.fillText(o.yLabel, pad.l, 11); }
+  ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t - 1, pw, ph + 2); ctx.clip();
+  for (const hl of o.hlines || []) {
+    if (hl.y < yMin || hl.y > yMax) continue;
+    ctx.strokeStyle = hl.color || muted; ctx.setLineDash(hl.dash === false ? [] : [5, 4]); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(pad.l, Y(hl.y)); ctx.lineTo(W - pad.r, Y(hl.y)); ctx.stroke(); ctx.setLineDash([]);
+    if (hl.label) { ctx.fillStyle = hl.color || muted; ctx.textAlign = "left"; ctx.fillText(hl.label, pad.l + 6, Y(hl.y) - 5); }
+  }
+  for (const vl of o.vlines || []) {
+    if (vl.x < xMin || vl.x > xMax) continue;
+    ctx.strokeStyle = vl.color || muted; ctx.setLineDash([3, 4]); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(X(vl.x), pad.t); ctx.lineTo(X(vl.x), pad.t + ph); ctx.stroke(); ctx.setLineDash([]);
+    if (vl.label) { ctx.fillStyle = vl.color || muted; ctx.textAlign = X(vl.x) > W / 2 ? "right" : "left"; ctx.fillText(vl.label, X(vl.x) + (X(vl.x) > W / 2 ? -6 : 6), pad.t + 12); }
+  }
+  for (const s of o.series || []) {
+    if (!s.pts || s.pts.length < 1) continue;
+    if (s.fill) {
+      ctx.fillStyle = alpha(s.color, 0.15); ctx.beginPath(); ctx.moveTo(X(s.pts[0][0]), Y(yMin));
+      for (const p of s.pts) ctx.lineTo(X(p[0]), Y(Math.min(p[1], yMax * 1.5)));
+      ctx.lineTo(X(s.pts[s.pts.length - 1][0]), Y(yMin)); ctx.closePath(); ctx.fill();
+    }
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.width || 2; ctx.setLineDash(s.dash ? [6, 4] : []);
+    ctx.beginPath();
+    s.pts.forEach((p, i) => { const y = Y(Math.min(p[1], yMax * 1.5)); i ? ctx.lineTo(X(p[0]), y) : ctx.moveTo(X(p[0]), y); });
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  for (const m of o.marks || []) {
+    if (m.x < xMin || m.x > xMax) continue;
+    const y = Math.min(m.y, yMax);
+    ctx.fillStyle = m.color || fg; ctx.beginPath(); ctx.arc(X(m.x), Y(y), m.r || 5, 0, Math.PI * 2); ctx.fill();
+    if (m.hollow) { ctx.fillStyle = cssVar("--card"); ctx.beginPath(); ctx.arc(X(m.x), Y(y), (m.r || 5) - 2, 0, Math.PI * 2); ctx.fill(); }
+    if (m.label) { ctx.fillStyle = m.color || fg; ctx.textAlign = X(m.x) > W * 0.7 ? "right" : "left"; ctx.fillText(m.label, X(m.x) + (X(m.x) > W * 0.7 ? -9 : 9), Y(y) - 8); }
+  }
+  ctx.restore();
+  return { X, Y };
+}
+function legend(items) { return h("div", { class: "legend" }, items.map(i => h("span", { class: i.dash ? "dash" : "", style: `--lc:${i.color}` }, i.label))); }
+
+/* Simulation shell */
+function shell(host, cfg) {
+  host.classList.add("simbox");
+  const parts = {
+    title: h("div", { class: "sim-title" }, h("span", {}, cfg.title), cfg.tag ? h("span", { class: "ptag" }, cfg.tag) : null),
+    vis: h("div", { class: "sim-vis" }),
+    stats: h("div", { class: "stats" }),
+    controls: h("div", { class: "controls" }),
+    actions: h("div", { class: "sim-actions" }),
+    summary: h("p", { class: "sim-summary", "aria-live": "polite" }),
+    caption: h("p", { class: "sim-caption" }, "Simplified illustrative model."),
+    details: h("details", { class: "sim-assump" }, h("summary", {}, "Model assumptions"), h("ul", {}, (cfg.assumptions || []).map(a => h("li", {}, a))))
+  };
+  host.append(parts.title, parts.vis, parts.stats, parts.controls, parts.actions, parts.summary, parts.caption, parts.details);
+  return parts;
+}
+function tile(label, sub) {
+  const v = h("div", { class: "value" }), s = h("div", { class: "sub" }, sub || "");
+  const el = h("div", { class: "stat" }, h("div", { class: "label" }, label), v, s);
+  return { el, set(val, subtxt, warn) { v.textContent = val; if (subtxt != null) s.textContent = subtxt; v.classList.toggle("warn", !!warn); } };
+}
+
+/* Fixed-rate stepper driven by requestAnimationFrame */
+function animator(tick, draw, rate) {
+  let raf = 0, last = 0, acc = 0, running = false;
+  const a = {
+    onEnd: null, onState: null,
+    get running() { return running; },
+    start() { if (running) return; running = true; last = 0; raf = requestAnimationFrame(frame); a.onState && a.onState(true); },
+    stop() { if (!running) return; running = false; cancelAnimationFrame(raf); raf = 0; a.onState && a.onState(false); }
+  };
+  function frame(t) {
+    if (!running) return;
+    if (!last) last = t;
+    const dt = Math.min(0.1, (t - last) / 1000); last = t;
+    acc += dt * rate();
+    let alive = true, n = 0;
+    while (acc >= 1 && alive && n < 200) { acc -= 1; alive = tick(); n++; }
+    draw(acc);
+    if (!alive) { running = false; raf = 0; a.onState && a.onState(false); a.onEnd && a.onEnd(); return; }
+    raf = requestAnimationFrame(frame);
+  }
+  return a;
+}
+function playButton(anim) {
+  const b = button(anim.running ? "Pause" : "Play", () => anim.running ? anim.stop() : anim.start(), true);
+  anim.onState = r => { b.textContent = r ? "Pause" : "Play"; };
+  return b;
+}
+
+/* =====================================================================
+   SIMULATIONS. Each SIMS[key](hostEl, opts) returns { start, stop, reset }.
+   ===================================================================== */
+const SIMS = {};
+
+/* ---- shared bargaining drawing (5.1 and 5.9) ---- */
+function drawBargain(cv, s) {
+  const { ctx, W, H } = cv; ctx.clearRect(0, 0, W, H);
+  const fg = cssVar("--fg"), muted = cssVar("--muted"), rule = cssVar("--rule"), accent = cssVar("--accent"), B = cssVar("--side-b"), red = cssVar("--dom-nuclear");
+  const pad = 40, y0 = 104;
+  const X = v => pad + Math.min(1.08, Math.max(-0.08, v)) * (W - 2 * pad);
+  ctx.font = "12px system-ui, sans-serif";
+  // axis
+  ctx.strokeStyle = rule; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X(0), y0); ctx.lineTo(X(1), y0); ctx.stroke();
+  ctx.lineWidth = 1;
+  for (const t of [0, 0.25, 0.5, 0.75, 1]) { ctx.beginPath(); ctx.moveTo(X(t), y0 - 5); ctx.lineTo(X(t), y0 + 5); ctx.stroke(); }
+  ctx.fillStyle = muted; ctx.textAlign = "left"; ctx.fillText("0 · everything to B", X(0), y0 + 50);
+  ctx.textAlign = "right"; ctx.fillText("1 · everything to A", X(1), y0 + 50);
+  // uncertainty band on B's ceiling
+  if (s.unc) { ctx.fillStyle = alpha(B, 0.2); ctx.fillRect(X(s.hi - s.u), y0 - 24, X(s.hi + s.u) - X(s.hi - s.u), 48); ctx.fillStyle = B; ctx.textAlign = "center"; ctx.fillText("A's uncertainty about c_B", X(s.hi + s.u), y0 + 66); }
+  // zone
+  if (s.hi > s.lo) {
+    ctx.fillStyle = alpha(accent, 0.22); ctx.fillRect(X(s.lo), y0 - 18, X(s.hi) - X(s.lo), 36);
+    ctx.fillStyle = fg; ctx.textAlign = "center";
+    ctx.fillText("deals both prefer to war", X((s.lo + s.hi) / 2), y0 - 28);
+  } else { ctx.fillStyle = red; ctx.textAlign = "center"; ctx.fillText("no deal zone", X((s.lo + s.hi) / 2), y0 - 28); }
+  // edges and p
+  ctx.fillStyle = muted; ctx.textAlign = "center";
+  ctx.fillText("p − c_A", X(s.lo), y0 + 32); ctx.fillText("p + c_B", X(s.hi), y0 + 32);
+  ctx.strokeStyle = fg; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(s.p), y0 - 40); ctx.lineTo(X(s.p), y0 + 22); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = fg; ctx.fillText("p = " + s.p.toFixed(2), X(s.p), y0 - 48);
+  // offer
+  if (s.x != null) {
+    const peace = s.x > s.lo && s.x < s.hi;
+    ctx.fillStyle = peace ? accent : red; ctx.beginPath(); ctx.arc(X(s.x), y0, 9, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = cssVar("--card"); ctx.lineWidth = 2; ctx.stroke();
+    ctx.textAlign = "left"; ctx.font = "600 13px system-ui, sans-serif"; ctx.fillStyle = peace ? accent : red;
+    ctx.fillText(`offer x = ${s.x.toFixed(2)} → ${peace ? "PEACE" : "WAR"}`, pad, 18);
+    ctx.font = "12px system-ui, sans-serif";
+  }
+  // power shift: next period's zone
+  if (s.shift) {
+    const y1 = y0 + 86;
+    ctx.strokeStyle = rule; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), y1); ctx.lineTo(X(1), y1); ctx.stroke();
+    const lo2 = s.p + s.delta - s.cA, hi2 = s.p + s.delta + s.cB;
+    ctx.setLineDash([5, 4]); ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.strokeRect(X(lo2), y1 - 14, X(hi2) - X(lo2), 28); ctx.setLineDash([]);
+    ctx.fillStyle = alpha(accent, 0.08); ctx.fillRect(X(lo2), y1 - 14, X(hi2) - X(lo2), 28);
+    ctx.fillStyle = muted; ctx.textAlign = "center"; ctx.fillText("next period · p′ = " + (s.p + s.delta).toFixed(2), X((lo2 + hi2) / 2), y1 + 30);
+    const overlapLo = Math.max(s.lo, lo2), overlapHi = Math.min(s.hi, hi2);
+    if (overlapHi > overlapLo) { ctx.fillStyle = alpha(accent, 0.35); ctx.fillRect(X(overlapLo), y1 - 14, X(overlapHi) - X(overlapLo), 28); }
+  }
+}
+
+/* 5.1 bargaining */
+SIMS.bargaining = function (el) {
+  const sh = shell(el, { title: "Simulation · Fearon's bargaining range", assumptions: [
+    "Prize normalized to 1. A wins a war with probability p; fighting costs A a share c_A and B a share c_B of the prize.",
+    "Any offer x with p − c_A < x < p + c_B is preferred to war by both sides (Fearon 1995).",
+    "Power shift is a teaching simplification of Powell (2006): next period A's expected share rises by Δ. If |Δ| exceeds c_A + c_B the two periods' deal zones do not overlap, and the declining side cannot be promised anything it will still receive tomorrow.",
+    "Uncertainty blurs B's ceiling by ±u, standing in for A's private information about B's costs."
+  ] });
+  const cv = makeCanvas(sh.vis, 250, "Bargaining range between two states, with a draggable offer");
+  const def = { p: 0.5, cA: 0.1, cB: 0.1, x: 0.5, shift: false, delta: 0.25, unc: false, u: 0.05 };
+  const st = Object.assign({}, def);
+  const tZone = tile("Deal zone"), tWidth = tile("Zone width", "c_A + c_B"), tOffer = tile("Offer"), tShift = tile("Power shift");
+  sh.stats.append(tZone.el, tWidth.el, tOffer.el, tShift.el);
+  const sP = slider({ label: "p · A's chance of winning", min: 0, max: 1, step: 0.01, value: def.p, format: v => v.toFixed(2), onInput: v => { st.p = v; draw(); } });
+  const sA = slider({ label: "c_A · A's cost of war", min: 0, max: 0.4, step: 0.01, value: def.cA, format: v => v.toFixed(2), onInput: v => { st.cA = v; draw(); } });
+  const sB = slider({ label: "c_B · B's cost of war", min: 0, max: 0.4, step: 0.01, value: def.cB, format: v => v.toFixed(2), onInput: v => { st.cB = v; draw(); } });
+  const sX = slider({ label: "x · offer to A (drag the dot too)", min: 0, max: 1, step: 0.01, value: def.x, format: v => v.toFixed(2), onInput: v => { st.x = v; draw(); } });
+  const cShift = checkCtl({ label: "Power shift (Powell 2006)", value: false, onChange: v => { st.shift = v; sD.disable(!v); draw(); } });
+  const sD = slider({ label: "Δ · A's expected gain next period", min: -0.5, max: 0.5, step: 0.01, value: def.delta, format: v => (v >= 0 ? "+" : "") + v.toFixed(2), onInput: v => { st.delta = v; draw(); } });
+  const cUnc = checkCtl({ label: "Uncertainty about B's costs", value: false, onChange: v => { st.unc = v; sU.disable(!v); draw(); } });
+  const sU = slider({ label: "u · half-width of A's uncertainty", min: 0, max: 0.2, step: 0.01, value: def.u, format: v => "±" + v.toFixed(2), onInput: v => { st.u = v; draw(); } });
+  sD.disable(true); sU.disable(true);
+  sh.controls.append(sP.el, sX.el, sA.el, sB.el, cShift.el, sD.el, cUnc.el, sU.el);
+  sh.actions.append(button("Reset", reset));
+  // drag the offer
+  let dragging = false;
+  const toX = ev => { const r = cv.c.getBoundingClientRect(); return Math.min(1, Math.max(0, (ev.clientX - r.left - 40) / (r.width - 80))); };
+  cv.c.addEventListener("pointerdown", ev => { dragging = true; cv.c.setPointerCapture(ev.pointerId); st.x = toX(ev); sX.set(st.x); draw(); });
+  cv.c.addEventListener("pointermove", ev => { if (!dragging) return; st.x = toX(ev); sX.set(st.x); draw(); });
+  cv.c.addEventListener("pointerup", () => { dragging = false; });
+  cv.c.addEventListener("pointercancel", () => { dragging = false; });
+  function draw() {
+    const z = MODEL.bargain(st.p, st.cA, st.cB);
+    drawBargain(cv, { p: st.p, cA: st.cA, cB: st.cB, lo: z.lo, hi: z.hi, x: st.x, shift: st.shift, delta: st.delta, unc: st.unc, u: st.u });
+    const peace = st.x > z.lo && st.x < z.hi;
+    tZone.set(`${z.lo.toFixed(2)} – ${z.hi.toFixed(2)}`, "any x in this range beats war for both");
+    tWidth.set(z.width.toFixed(2), "room for a deal");
+    tOffer.set(peace ? "Peace" : "War", `x = ${st.x.toFixed(2)}`, !peace);
+    let shiftMsg = "off", shiftSub = "turn on to see Powell's problem", warn = false;
+    if (st.shift) {
+      const decliner = st.delta > 0 ? "B" : "A";
+      if (Math.abs(st.delta) > z.width) { shiftMsg = `${decliner} prefers preventive war now`; shiftSub = `|Δ| = ${Math.abs(st.delta).toFixed(2)} exceeds c_A + c_B = ${z.width.toFixed(2)}`; warn = true; }
+      else { shiftMsg = "A deal can still hold"; shiftSub = `|Δ| = ${Math.abs(st.delta).toFixed(2)} is within c_A + c_B = ${z.width.toFixed(2)}`; }
+    }
+    tShift.set(shiftMsg, shiftSub, warn);
+    sh.summary.textContent = `Deal zone from ${z.lo.toFixed(2)} to ${z.hi.toFixed(2)}. The offer x = ${st.x.toFixed(2)} means ${peace ? "peace" : "war"}.` + (st.shift ? ` With a power shift of ${st.delta.toFixed(2)}, ${shiftMsg.toLowerCase()}.` : "");
+  }
+  function reset() { Object.assign(st, def); sP.set(st.p); sA.set(st.cA); sB.set(st.cB); sX.set(st.x); sD.set(st.delta); sU.set(st.u); cShift.set(false); cUnc.set(false); sD.disable(true); sU.disable(true); draw(); }
+  cv.onResize(draw); draw();
+  return { start() {}, stop() {}, reset, enableShift() { cShift.set(true); st.shift = true; sD.disable(false); draw(); } };
+};
+
+/* 5.2 cost exchange */
+SIMS.costExchange = function (el) {
+  const sh = shell(el, { title: "Simulation · drone vs. interceptor", assumptions: [
+    "Exchange ratio = (interceptors fired per drone × interceptor cost) ÷ drone cost.",
+    "Daily defender spend = drones per day × interceptors per drone × interceptor cost. Every drone is engaged; misses and leakers are ignored.",
+    "Patriot $4M and THAAD $13.5M interceptor costs follow EPC. The interceptor-drone cost ($5,000 default) and the $2B defense budget are illustrative."
+  ] });
+  const cv = makeCanvas(sh.vis, 240, "Cumulative attacker and defender spending over thirty days");
+  sh.vis.append(legend([{ color: cssVar("--side-a"), label: "Defender spend" }, { color: cssVar("--side-b"), label: "Attacker spend" }, { color: cssVar("--muted"), label: "Defense budget", dash: true }]));
+  const PRESETS = { patriot: 4e6, thaad: 13.5e6, drone: null };
+  const def = { droneCost: 30000, preset: "patriot", custom: 5000, perDrone: 1, dronesPerDay: 50, budget: 2e9 };
+  const st = Object.assign({}, def);
+  const tRatio = tile("Exchange ratio", "defender $ per attacker $"), tDef = tile("Defender spend / day"), tAtt = tile("Attacker spend / day"), tDay = tile("Budget runs out");
+  sh.stats.append(tRatio.el, tDef.el, tAtt.el, tDay.el);
+  const sDrone = slider({ label: "Attack drone cost", min: 500, max: 100000, step: 500, value: def.droneCost, format: fmt.money, onInput: v => { st.droneCost = v; draw(); } });
+  const sel = selectCtl({ label: "Interceptor", value: def.preset, options: [{ value: "patriot", label: "Patriot · $4M" }, { value: "thaad", label: "THAAD · $13.5M" }, { value: "drone", label: "Interceptor drone · user-set" }], onChange: v => { st.preset = v; sCustom.disable(v !== "drone"); draw(); } });
+  const sCustom = slider({ label: "Interceptor drone cost (illustrative)", min: 1000, max: 200000, step: 1000, value: def.custom, format: fmt.money, onInput: v => { st.custom = v; draw(); } });
+  const sPer = slider({ label: "Interceptors fired per drone", min: 1, max: 3, step: 1, value: def.perDrone, onInput: v => { st.perDrone = v; draw(); } });
+  const sRate = slider({ label: "Drones per day", min: 1, max: 500, step: 1, value: def.dronesPerDay, onInput: v => { st.dronesPerDay = v; draw(); } });
+  const sBud = slider({ label: "Defense budget (illustrative)", min: 0.1e9, max: 20e9, step: 0.1e9, value: def.budget, format: fmt.money, onInput: v => { st.budget = v; draw(); } });
+  sCustom.disable(true);
+  sh.controls.append(sDrone.el, sel.el, sCustom.el, sPer.el, sRate.el, sBud.el);
+  sh.actions.append(button("Reset", reset));
+  function draw() {
+    const icost = st.preset === "drone" ? st.custom : PRESETS[st.preset];
+    const r = MODEL.costExchange({ perDrone: st.perDrone, interceptorCost: icost, droneCost: st.droneCost, dronesPerDay: st.dronesPerDay, budget: st.budget });
+    const ratioTxt = r.ratio >= 10 ? `${fmt.int(r.ratio)} : 1` : `${r.ratio.toFixed(2)} : 1`;
+    tRatio.set(ratioTxt, r.ratio >= 1 ? "defender pays more" : "attacker pays more", r.ratio >= 10);
+    tDef.set(fmt.money(r.dailyDef), `${st.dronesPerDay} drones × ${st.perDrone} × ${fmt.money(icost)}`);
+    tAtt.set(fmt.money(r.dailyAtt), `${st.dronesPerDay} × ${fmt.money(st.droneCost)}`);
+    tDay.set(r.budgetDay <= 30 ? `Day ${Math.ceil(r.budgetDay)}` : `Day ${fmt.int(r.budgetDay)}`, r.budgetDay <= 30 ? "within the 30-day window" : "beyond the 30-day window", r.budgetDay <= 30);
+    const yMax = Math.max(r.def[30][1], st.budget, r.att[30][1]) * 1.08;
+    lineChart(cv, { xMax: 30, yMax, xLabel: "days", yFmt: short, yLabel: "cumulative spend ($)",
+      series: [{ pts: r.att, color: cssVar("--side-b") }, { pts: r.def, color: cssVar("--side-a") }],
+      hlines: [{ y: st.budget, label: "defense budget " + fmt.money(st.budget) }],
+      vlines: r.budgetDay <= 30 ? [{ x: r.budgetDay, label: "budget gone", color: cssVar("--side-a") }] : [] });
+    sh.summary.textContent = `Exchange ratio ${ratioTxt}. The defender spends ${fmt.money(r.dailyDef)} a day against ${fmt.money(r.dailyAtt)}, and a ${fmt.money(st.budget)} budget lasts ${r.budgetDay <= 30 ? Math.ceil(r.budgetDay) + " days" : "past 30 days"}.`;
+  }
+  function reset() { Object.assign(st, def); sDrone.set(st.droneCost); sel.set(st.preset); sCustom.set(st.custom); sCustom.disable(true); sPer.set(st.perDrone); sRate.set(st.dronesPerDay); sBud.set(st.budget); draw(); }
+  cv.onResize(draw); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.3 stockpile */
+SIMS.stockpile = function (el) {
+  const sh = shell(el, { title: "Simulation · fired in months, rebuilt in years", assumptions: [
+    "Monthly steps: S(t+1) = max(0, S(t) − fired + produced). Firing stops when the war ends; production continues.",
+    "Patriot starting stock of about 2,400 is derived: CSIS's 759–827 remaining is about a third of the prewar stock. Production 20 a month (CSIS via Stars and Stripes, CNN).",
+    "THAAD: starting stock 452, no deliveries forecast in 2026. The default firing rate of 35 a month reproduces the reported fall to 234–278 in about six months.",
+    "The Patriot default of 270 fired a month reproduces the reported two-thirds drawdown in about six months."
+  ] });
+  const cv = makeCanvas(sh.vis, 240, "Interceptor inventory over 48 months");
+  const PRESETS = { patriot: { start: 2400, fire: 270, prod: 20, war: 6 }, thaad: { start: 452, fire: 35, prod: 0, war: 6 } };
+  const st = Object.assign({ preset: "patriot" }, PRESETS.patriot);
+  const tEnd = tile("Stock when war ends"), tLow = tile("Lowest stock"), tZero = tile("Stock hits zero"), tRebuild = tile("Months to rebuild", "to prewar level");
+  sh.stats.append(tEnd.el, tLow.el, tZero.el, tRebuild.el);
+  const sel = selectCtl({ label: "Preset", value: "patriot", options: [{ value: "patriot", label: "Patriot" }, { value: "thaad", label: "THAAD" }, { value: "custom", label: "Custom" }], onChange: v => { if (PRESETS[v]) { Object.assign(st, PRESETS[v]); sync(); } st.preset = v; draw(); } });
+  const custom = () => { if (st.preset !== "custom") { st.preset = "custom"; sel.set("custom"); } };
+  const sStart = slider({ label: "Starting stock", min: 0, max: 5000, step: 10, value: st.start, format: fmt.int, onInput: v => { st.start = v; custom(); draw(); } });
+  const sFire = slider({ label: "Fired per month during war", min: 0, max: 500, step: 5, value: st.fire, format: fmt.int, onInput: v => { st.fire = v; custom(); draw(); } });
+  const sProd = slider({ label: "Produced per month", min: 0, max: 100, step: 1, value: st.prod, format: fmt.int, onInput: v => { st.prod = v; custom(); draw(); } });
+  const sWar = slider({ label: "War length (months)", min: 1, max: 24, step: 1, value: st.war, onInput: v => { st.war = v; custom(); draw(); } });
+  sh.controls.append(sel.el, sStart.el, sFire.el, sProd.el, sWar.el);
+  sh.actions.append(button("Reset", reset));
+  function sync() { sStart.set(st.start); sFire.set(st.fire); sProd.set(st.prod); sWar.set(st.war); }
+  function draw() {
+    const r = MODEL.stockpile({ start: st.start, fire: st.fire, prod: st.prod, warMonths: st.war });
+    const pts = r.S.map((v, i) => [i, v]);
+    const yMax = Math.max(st.start, ...r.S) * 1.1 || 10;
+    lineChart(cv, { xMax: 48, yMax, xLabel: "months", yLabel: "interceptors in stock", yFmt: short,
+      series: [{ pts, color: cssVar("--side-a"), fill: true }],
+      hlines: [{ y: st.start, label: "prewar level" }],
+      vlines: [{ x: st.war, label: "war ends" }],
+      marks: r.zero ? [{ x: r.zero, y: 0, color: cssVar("--dom-nuclear"), label: "empty at month " + r.zero }] : [] });
+    tEnd.set(fmt.int(r.endWar), `after ${st.war} months`);
+    tLow.set(fmt.int(r.min), r.min === 0 ? "ran dry" : "never empty", r.min === 0);
+    tZero.set(r.zero ? "Month " + r.zero : "Never", r.zero ? "during the war" : "within 48 months", !!r.zero);
+    tRebuild.set(r.rebuild === Infinity ? "Never" : r.rebuild === 0 ? "0" : fmt.int(r.rebuild), r.rebuild === Infinity ? "at 0 produced a month" : r.rebuild > 12 ? `about ${(r.rebuild / 12).toFixed(1)} years` : "", r.rebuild > 36);
+    sh.summary.textContent = `Stock falls from ${fmt.int(st.start)} to ${fmt.int(r.endWar)} over a ${st.war}-month war firing ${st.fire} a month. Rebuilding at ${st.prod} a month takes ${r.rebuild === Infinity ? "forever" : r.rebuild + " months"}.`;
+  }
+  function reset() { st.preset = "patriot"; Object.assign(st, PRESETS.patriot); sel.set("patriot"); sync(); draw(); }
+  cv.onResize(draw); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.4 orbital */
+SIMS.orbital = function (el, opts) {
+  opts = opts || {};
+  const preset = opts.preset === "twoBlocs" ? { N: 800, alt: 800, targets: 10, retaliate: true, speed: 4 } : { N: 500, alt: 800, targets: 10, retaliate: false, speed: 4 };
+  const c = MODEL.orbitalConst;
+  const sh = shell(el, { title: opts.preset === "twoBlocs" ? "Simulation · two blocs hold each other's satellites at risk" : "Simulation · satellite deterrence and the Kessler cascade", assumptions: [
+    "One step is one month. Satellite losses = k · D · (S_A + S_B), split by each side's share; each loss adds f = 25 fragments. k = 1×10⁻⁶.",
+    "Debris-on-debris collisions = k_d · D², each adding f_d = 100 fragments. k_d = 1.25×10⁻⁸. This term makes a cascade possible.",
+    "Decay removes λ · D each month: λ = 0.05 at 800 km and 0.3 at 400 km. These decay rates are exaggerated so the effect shows within ten years.",
+    "An anti-satellite strike destroys one satellite and adds F = 1,500 fragments. Real tests have each created more than a thousand trackable fragments (NASA Orbital Debris Program Office).",
+    "Cascade threshold D* = (λ − k·f·(S_A + S_B)) ÷ (k_d · f_d). With 500 satellites a side it is 20,000 at 800 km. Starting debris is 5,000. If satellites alone outpace decay, D* is 0 and any debris grows.",
+    "Retaliation: B strikes back with the same number of targets the following month."
+  ] });
+  const two = h("div", { class: "two" }); sh.vis.append(two);
+  const cvO = makeCanvas(two, 320, "Top-down view of one orbital shell with both sides' satellites and debris");
+  const cvC = makeCanvas(two, 320, "Debris count over 120 months against the cascade threshold");
+  sh.vis.append(legend([{ color: cssVar("--side-a"), label: "Side A satellites" }, { color: cssVar("--side-b"), label: "Side B satellites" }, { color: cssVar("--muted"), label: "Debris" }, { color: cssVar("--dom-nuclear"), label: "Cascade threshold D*", dash: true }]));
+  const tA = tile("Side A satellites"), tB = tile("Side B satellites"), tD = tile("Debris fragments"), tHalf = tile("Half the fleet lost");
+  sh.stats.append(tA.el, tB.el, tD.el, tHalf.el);
+  const p = Object.assign({}, preset);
+  let st = MODEL.orbitalInit(p.N, p.alt);
+  const sN = slider({ label: "Satellites per side", min: 50, max: 5000, step: 50, value: p.N, format: fmt.int, onInput: v => { p.N = v; reset(); } });
+  const sAlt = selectCtl({ label: "Altitude", value: String(p.alt), options: [{ value: "800", label: "800 km · slow decay" }, { value: "400", label: "400 km · fast decay" }], onChange: v => { p.alt = +v; reset(); } });
+  const sT = slider({ label: "Targets per strike", min: 1, max: 50, step: 1, value: p.targets, onInput: v => { p.targets = v; strikeBtn.textContent = `A strikes ${v}`; } });
+  const cRet = checkCtl({ label: "B retaliates with the same number", value: p.retaliate, onChange: v => { p.retaliate = v; } });
+  const sSpd = selectCtl({ label: "Speed", value: String(p.speed), options: [{ value: "1", label: "1×" }, { value: "4", label: "4×" }, { value: "16", label: "16×" }], onChange: v => { p.speed = +v; } });
+  sh.controls.append(sN.el, sAlt.el, sT.el, cRet.el, sSpd.el);
+  const anim = animator(() => MODEL.orbitalStep(st), draw, () => 3 * p.speed);
+  const playBtn = playButton(anim);
+  const strikeBtn = button(`A strikes ${p.targets}`, () => { MODEL.orbitalStrike(st, "A", p.targets); if (p.retaliate) st.queue.push({ by: "B", n: p.targets }); draw(0); });
+  sh.actions.append(playBtn, strikeBtn, button("Reset", reset));
+  // deterministic scatter for debris dots and satellite angles
+  const DEB = Array.from({ length: 900 }, (_, i) => { const r = MODEL.rng(i * 2654435761 + 7); return [r() * Math.PI * 2, (r() - 0.5) * 2]; });
+  const MAXD = 120, GA = 2.399963;
+  let prevA = -1, prevB = -1; const flashes = [];
+  function drawOrbit(frac) {
+    const { ctx, W, H } = cvO; ctx.clearRect(0, 0, W, H);
+    const cx = W / 2, cy = H / 2, Re = Math.min(W, H) * 0.16, rs = Re * (st.alt === 800 ? 2.3 : 1.75);
+    const A = cssVar("--side-a"), B = cssVar("--side-b"), muted = cssVar("--muted"), rule = cssVar("--rule"), red = cssVar("--dom-nuclear");
+    const Dstar = MODEL.orbitalThreshold(st.SA, st.SB, c.lambda[st.alt]);
+    const cascade = st.D > Dstar;
+    // earth
+    ctx.fillStyle = alpha(cssVar("--side-b"), 0.25); ctx.beginPath(); ctx.arc(cx, cy, Re, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = rule; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = rule; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.arc(cx, cy, rs, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    // debris
+    const nd = Math.min(DEB.length, Math.round(st.D / 40));
+    ctx.fillStyle = alpha(cascade ? red : muted, 0.55);
+    for (let i = 0; i < nd; i++) { const a = DEB[i][0] + st.month * 0.01, r = rs + DEB[i][1] * 16; ctx.fillRect(cx + Math.cos(a) * r - 0.75, cy + Math.sin(a) * r - 0.75, 1.5, 1.5); }
+    // satellites
+    const rot = (st.month + frac) * 0.06;
+    const nA = Math.round(Math.min(1, st.SA / st.N) * MAXD), nB = Math.round(Math.min(1, st.SB / st.N) * MAXD);
+    if (prevA >= 0 && nA < prevA) for (let i = nA; i < prevA; i++) flashes.push({ a: i * GA + rot, r: rs + 7, ttl: 14, col: A });
+    if (prevB >= 0 && nB < prevB) for (let i = nB; i < prevB; i++) flashes.push({ a: i * GA + Math.PI / 97 - rot, r: rs - 7, ttl: 14, col: B });
+    prevA = nA; prevB = nB;
+    ctx.fillStyle = A; for (let i = 0; i < nA; i++) { const a = i * GA + rot; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * (rs + 7), cy + Math.sin(a) * (rs + 7), 2.2, 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillStyle = B; for (let i = 0; i < nB; i++) { const a = i * GA + Math.PI / 97 - rot; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * (rs - 7), cy + Math.sin(a) * (rs - 7), 2.2, 0, Math.PI * 2); ctx.fill(); }
+    for (let i = flashes.length - 1; i >= 0; i--) {
+      const f = flashes[i]; ctx.strokeStyle = alpha(f.col, f.ttl / 14); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx + Math.cos(f.a) * f.r, cy + Math.sin(f.a) * f.r, 3 + (14 - f.ttl) * 0.8, 0, Math.PI * 2); ctx.stroke();
+      if (--f.ttl <= 0) flashes.splice(i, 1);
+    }
+    ctx.font = "600 12px system-ui, sans-serif"; ctx.fillStyle = cssVar("--fg"); ctx.textAlign = "center";
+    ctx.fillText(`month ${st.month}`, cx, cy - 2); ctx.font = "11px system-ui, sans-serif"; ctx.fillStyle = muted; ctx.fillText(`${st.alt} km shell`, cx, cy + 13);
+    if (cascade) { ctx.fillStyle = red; ctx.font = "700 12px system-ui, sans-serif"; ctx.textAlign = "left"; ctx.fillText("CASCADE · debris grows on its own", 10, 18); }
+    for (const e of st.events.slice(-3)) { /* recent strikes listed in summary */ }
+  }
+  function drawChart() {
+    const Dstar = MODEL.orbitalThreshold(st.SA, st.SB, c.lambda[st.alt]);
+    const maxHist = Math.max(...st.hist.map(p => p[1]));
+    const cap = Dstar > 0 ? Dstar * 4 : c.D0 * 10;
+    const yMax = Math.max(c.D0 * 2, Math.min(maxHist * 1.1, cap), Dstar > 0 && Dstar < 60000 ? Dstar * 1.3 : 0);
+    lineChart(cvC, { xMax: 120, yMax, xLabel: "months", yLabel: "debris fragments", yFmt: short,
+      series: [{ pts: st.hist, color: cssVar("--muted"), fill: true }],
+      hlines: [{ y: Dstar, label: Dstar > 0 ? "cascade threshold D* ≈ " + fmt.int(Dstar) : "D* = 0 · unstable", color: cssVar("--dom-nuclear") }],
+      marks: st.events.map(e => ({ x: e.month, y: Math.min(yMax * 0.97, st.hist[Math.min(e.month, st.hist.length - 1)][1]), color: e.by === "A" ? cssVar("--side-a") : cssVar("--side-b"), r: 4, label: `${e.by} strikes ${e.n}` })) });
+    if (Dstar > yMax) { const { ctx } = cvC; ctx.fillStyle = cssVar("--dom-nuclear"); ctx.font = "11px system-ui, sans-serif"; ctx.textAlign = "right"; ctx.fillText("D* ≈ " + fmt.int(Dstar) + " · off chart", cvC.W - 16, 30); }
+  }
+  function draw(frac) {
+    drawOrbit(frac || 0); drawChart();
+    const Dstar = MODEL.orbitalThreshold(st.SA, st.SB, c.lambda[st.alt]);
+    const cascade = st.D > Dstar;
+    tA.set(fmt.int(st.SA), `of ${fmt.int(st.N)}`, st.SA < st.N / 2);
+    tB.set(fmt.int(st.SB), `of ${fmt.int(st.N)}`, st.SB < st.N / 2);
+    tD.set(st.D >= 1e9 ? "> 1 billion" : fmt.int(st.D), cascade ? "CASCADE · above D*" : `D* ≈ ${fmt.int(Dstar)}`, cascade);
+    const hf = s => s === null ? "not within 120 mo" : "month " + s;
+    tHalf.set(`A ${hf(st.halfA)}`, `B ${hf(st.halfB)}`, st.halfA !== null || st.halfB !== null);
+    const strikes = st.events.length ? st.events.map(e => `${e.by} struck ${e.n} at month ${e.month}`).join("; ") + ". " : "No strikes yet. ";
+    sh.summary.textContent = `Month ${st.month}: A keeps ${fmt.int(st.SA)} and B keeps ${fmt.int(st.SB)} of ${fmt.int(st.N)} satellites. Debris ${fmt.int(Math.min(st.D, 1e9))}${cascade ? ", above the cascade threshold" : ""}. ${strikes}` + (st.month >= 120 ? "Run finished." : "");
+  }
+  function reset() { anim.stop(); st = MODEL.orbitalInit(p.N, p.alt); prevA = prevB = -1; flashes.length = 0; draw(0); if (!REDUCED && visible) anim.start(); }
+  let visible = false;
+  cvO.onResize(() => draw(0)); cvC.onResize(() => draw(0)); draw(0);
+  return {
+    start() { visible = true; if (!REDUCED && st.month < 120) anim.start(); },
+    stop() { visible = false; anim.stop(); },
+    reset
+  };
+};
+
+/* 5.5 signal */
+SIMS.signal = function (el) {
+  const GOALS = ["Limited territorial gain", "Regime change", "Bargaining leverage", "Domestic political survival"];
+  const SOURCES = [
+    { name: "Satellite imagery", mul: 0.5, obs: [
+      ["Logistics build-up near the border", [0.5, 0.6, 0.3, 0.2]],
+      ["Fuel and ammunition depots deep in the interior", [0.2, 0.6, 0.1, 0.1]],
+      ["Units parked in the open, easy to see", [0.2, 0.1, 0.6, 0.3]],
+      ["No unusual activity", [0.1, 0.05, 0.3, 0.4]] ] },
+    { name: "Troop movements", mul: 1.0, obs: [
+      ["Airborne and armored units concentrating on one axis", [0.6, 0.5, 0.2, 0.1]],
+      ["Forces dispersed along the whole frontier", [0.2, 0.5, 0.4, 0.2]],
+      ["Units rotate in and out, none stay", [0.1, 0.05, 0.5, 0.4]],
+      ["Internal security units redeployed to the capital", [0.1, 0.05, 0.1, 0.6]] ] },
+    { name: "Leader statements", mul: 2.0, obs: [
+      ["Demands a specific border concession", [0.6, 0.2, 0.5, 0.2]],
+      ["Calls the rival government illegitimate", [0.2, 0.7, 0.2, 0.3]],
+      ["Appeals to national unity against foreign enemies", [0.2, 0.2, 0.2, 0.7]],
+      ["Signals openness to talks", [0.3, 0.1, 0.6, 0.3]] ] }
+  ];
+  const tableRows = SOURCES.map(s => `${s.name} (noise × ${s.mul}): ` + s.obs.map(o => `"${o[0]}" → ${o[1].join(" / ")}`).join("; "));
+  const sh = shell(el, { title: "Simulation · inferring a rival's hidden goal", assumptions: [
+    "The rival has one hidden goal of four. Each turn you choose a source; it yields one observation drawn from that source's likelihood table given the true goal.",
+    "Beliefs update by Bayes' rule: posterior ∝ likelihood × prior. Likelihoods are normalized per goal within each source.",
+    "The noise slider blends each likelihood toward uniform. Statements are twice as noisy as the slider value, imagery half as noisy.",
+    "Illustrative likelihood weights, in the order " + GOALS.join(" / ") + ":",
+    ...tableRows
+  ] });
+  const bars = h("div", { class: "bars" });
+  const rows = GOALS.map(g => { const i = h("i"); const v = h("span", { class: "v" }); const b = h("div", { class: "b" }, h("span", {}, g), h("div", { class: "t" }, i), v); bars.append(b); return { b, i, v }; });
+  const badge = h("span", { class: "badge off" }, "Not yet confident");
+  const turnsEl = h("span", { class: "ui" });
+  const truthEl = h("span", { class: "ui" });
+  const head = h("div", { class: "ui", style: "display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;" }, badge, turnsEl, truthEl);
+  const srcBtns = h("div", { class: "srcbtns" });
+  const log = h("ol", { class: "log" });
+  sh.vis.append(h("p", { class: "hint" }, "Choose an intelligence source to draw one observation."), srcBtns, head, bars, log);
+  const st = { prior: [0.25, 0.25, 0.25, 0.25], truth: 0, turns: 0, noise: 0.2, reveal: "random", show: false };
+  const rng = MODEL.rng(Date.now() & 0xffffffff);
+  SOURCES.forEach((s, si) => srcBtns.append(button(s.name, () => turn(si), si === 0)));
+  const sNoise = slider({ label: "Noise", min: 0, max: 1, step: 0.05, value: st.noise, format: v => v.toFixed(2), onInput: v => { st.noise = v; } });
+  const selTruth = selectCtl({ label: "Hidden goal (reveal panel)", value: "random", options: [{ value: "random", label: "Random" }].concat(GOALS.map((g, i) => ({ value: String(i), label: g }))), onChange: v => { st.reveal = v; reset(); } });
+  const cShow = checkCtl({ label: "Show the hidden goal", value: false, onChange: v => { st.show = v; render(); } });
+  sh.controls.append(sNoise.el, selTruth.el, cShow.el);
+  sh.actions.append(button("Reset", reset));
+  function lik(si) {
+    const s = SOURCES[si]; const n = Math.min(0.95, st.noise * s.mul);
+    const colSum = [0, 0, 0, 0]; s.obs.forEach(o => o[1].forEach((w, g) => colSum[g] += w));
+    return s.obs.map(o => o[1].map((w, g) => (1 - n) * (w / colSum[g]) + n / s.obs.length));
+  }
+  function turn(si) {
+    const L = lik(si);
+    let u = rng(), oi = 0; for (; oi < L.length - 1; oi++) { u -= L[oi][st.truth]; if (u <= 0) break; }
+    const post = st.prior.map((pr, g) => pr * L[oi][g]); const z = post.reduce((a, b) => a + b, 0);
+    st.prior = post.map(v => v / z); st.turns++;
+    log.prepend(h("li", {}, h("b", {}, SOURCES[si].name + ": "), SOURCES[si].obs[oi][0]));
+    while (log.children.length > 6) log.lastChild.remove();
+    render();
+  }
+  function render() {
+    const max = Math.max(...st.prior), best = st.prior.indexOf(max);
+    rows.forEach((r, g) => { r.i.style.width = (st.prior[g] * 100).toFixed(1) + "%"; r.v.textContent = fmt.pct(st.prior[g]); r.b.classList.toggle("hid", st.show && g === st.truth); });
+    const confident = max >= 0.8;
+    badge.textContent = confident ? `Confident: ${GOALS[best]}` : "Not yet confident";
+    badge.classList.toggle("off", !confident);
+    turnsEl.textContent = `Turns: ${st.turns}`;
+    truthEl.textContent = st.show ? `Hidden goal: ${GOALS[st.truth]}` : "";
+    sh.summary.textContent = `After ${st.turns} turn${st.turns === 1 ? "" : "s"}, the most likely goal is ${GOALS[best]} at ${fmt.pct(max)}.` + (confident ? ` Confident${best === st.truth ? ", and correct" : ", but wrong"}.` : "");
+  }
+  function reset() { st.prior = [0.25, 0.25, 0.25, 0.25]; st.turns = 0; st.truth = st.reveal === "random" ? Math.floor(rng() * 4) : +st.reveal; log.innerHTML = ""; render(); }
+  reset();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.6 mass vs exquisite */
+SIMS.massVsExquisite = function (el, opts) {
+  opts = opts || {};
+  const DEF = { E0: 100, costE: 1e7, aE: 2.0, pE: 1, M0: 3000, costM: 5e4, aM: 0.001, pM: 100 };
+  const P2036 = Object.assign({}, DEF, { pM: 250 });
+  const start = opts.preset === "2036" ? P2036 : DEF;
+  const sh = shell(el, { title: opts.preset === "2036" ? "Simulation · the 2036 preset: factory-scale production" : "Simulation · few and expensive vs. many and cheap", tag: opts.preset === "2036" ? "PROJECTION" : null, assumptions: [
+    "Lanchester's square law with production. Per day: E ← E − a_M·M + p_E and M ← M − a_E·E + p_M, floored at zero. E = advanced units, M = cheap units.",
+    "Defaults are illustrative: 100 advanced units at $10M each kill 2.0 cheap units a day each and are replaced at 1 a day; 3,000 cheap units at $50,000 each kill 0.001 advanced units a day each and are replaced at 100 a day.",
+    "The war runs 120 days or until one side reaches zero. Daily spend is production × unit cost.",
+    "The 2036 preset only raises cheap-unit production to 250 a day."
+  ] });
+  const cv = makeCanvas(sh.vis, 240, "Force size of each side as a share of its starting strength over 120 days");
+  sh.vis.append(legend([{ color: cssVar("--side-a"), label: "Advanced force (E)" }, { color: cssVar("--side-b"), label: "Cheap force (M)" }]));
+  const st = Object.assign({}, start);
+  const tWin = tile("Winner"), tSpE = tile("Advanced spend / day"), tSpM = tile("Cheap spend / day"), tTip = tile("Cheap side wins at", "production per day");
+  sh.stats.append(tWin.el, tSpE.el, tSpM.el, tTip.el);
+  const S = {};
+  S.E0 = slider({ label: "Advanced units", min: 10, max: 500, step: 10, value: st.E0, onInput: v => { st.E0 = v; draw(); } });
+  S.costE = slider({ label: "Advanced unit cost", min: 1e6, max: 5e7, step: 1e6, value: st.costE, format: fmt.money, onInput: v => { st.costE = v; draw(); } });
+  S.aE = slider({ label: "Cheap units each advanced unit kills / day", min: 0.1, max: 5, step: 0.1, value: st.aE, format: v => v.toFixed(1), onInput: v => { st.aE = v; draw(); } });
+  S.pE = slider({ label: "Advanced units built / day", min: 0, max: 10, step: 1, value: st.pE, onInput: v => { st.pE = v; draw(); } });
+  S.M0 = slider({ label: "Cheap units", min: 500, max: 10000, step: 100, value: st.M0, format: fmt.int, onInput: v => { st.M0 = v; draw(); } });
+  S.costM = slider({ label: "Cheap unit cost", min: 5e3, max: 5e5, step: 5e3, value: st.costM, format: fmt.money, onInput: v => { st.costM = v; draw(); } });
+  S.aM = slider({ label: "Advanced units each cheap unit kills / day", min: 0.0001, max: 0.01, step: 0.0001, value: st.aM, format: v => v.toFixed(4), onInput: v => { st.aM = v; draw(); } });
+  S.pM = slider({ label: "Cheap units built / day", min: 0, max: 500, step: 5, value: st.pM, onInput: v => { st.pM = v; draw(); } });
+  sh.controls.append(S.E0.el, S.M0.el, S.costE.el, S.costM.el, S.aE.el, S.aM.el, S.pE.el, S.pM.el);
+  sh.actions.append(button("2026 defaults", () => { Object.assign(st, DEF); sync(); draw(); }), button("2036 preset", () => { Object.assign(st, P2036); sync(); draw(); }), button("Reset", reset));
+  function sync() { for (const k in S) S[k].set(st[k]); }
+  function draw() {
+    const r = MODEL.mass(st);
+    const pE = r.hE.map(p => [p[0], p[1] / st.E0 * 100]), pM = r.hM.map(p => [p[0], p[1] / st.M0 * 100]);
+    const yMax = Math.max(100, ...pE.map(p => p[1]), ...pM.map(p => p[1])) * 1.05;
+    const win = r.winner === "advanced" ? "Advanced force" : r.winner === "cheap" ? "Cheap force" : r.winner === "draw" ? "Draw" : "Undecided";
+    lineChart(cv, { xMax: 120, yMax, xLabel: "days", yLabel: "% of starting force", yFmt: v => v + "%",
+      series: [{ pts: pE, color: cssVar("--side-a") }, { pts: pM, color: cssVar("--side-b") }],
+      vlines: r.day ? [{ x: r.day, label: `${win} wins · day ${r.day}` }] : [] });
+    tWin.set(win, r.day ? `decided on day ${r.day}` : "after 120 days", r.winner === "cheap");
+    tSpE.set(fmt.money(r.spendE), `${st.pE} × ${fmt.money(st.costE)}`);
+    tSpM.set(fmt.money(r.spendM), `${st.pM} × ${fmt.money(st.costM)}`);
+    const tip = MODEL.massTipping(st);
+    tTip.set(tip === null ? "> 1,000" : fmt.int(tip), tip === null ? "not within range" : `currently ${st.pM} a day`, tip !== null && st.pM >= tip);
+    sh.summary.textContent = `${win}${r.day ? " wins on day " + r.day : ""}. The cheap side builds ${st.pM} units a day for ${fmt.money(r.spendM)}; the advanced side builds ${st.pE} for ${fmt.money(r.spendE)}. The cheap side starts winning at about ${tip === null ? "more than 1,000" : tip} units a day.`;
+  }
+  function reset() { Object.assign(st, start); sync(); draw(); }
+  cv.onResize(draw); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.7 chokepoint */
+SIMS.chokepoint = function (el) {
+  const NODES = [{ name: "Mining", share: 60 }, { name: "Refining", share: 91 }, { name: "Magnets", share: 94 }, { name: "Motors", share: null }, { name: "Drones, missiles, robots", share: null }];
+  const sh = shell(el, { title: "Simulation · the magnet supply chain", assumptions: [
+    "China's share of each step: mining about 60%, refining about 91%, permanent magnets about 94% (IEA figures via S&P Global). Downstream assembly is not scored.",
+    "With an export ban on, output stays at 100% while the stockpile lasts, then falls to the smallest non-China share along the chain: 6%, set by magnets.",
+    "No substitution, recycling or new capacity is modeled. All of those take years, which is the point of the stockpile slider."
+  ] });
+  const chain = h("div", { class: "chain" });
+  const nodeEls = NODES.map(n => { const fill = h("i"); const e = h("div", { class: "node" }, h("b", {}, n.name), h("span", { class: "sh" }, n.share == null ? "downstream" : `China ${n.share}% · rest ${100 - n.share}%`), h("div", { class: "fill" }, fill)); if (n.share != null) fill.style.width = n.share + "%"; chain.append(e); return e; });
+  sh.vis.append(chain);
+  const cv = makeCanvas(sh.vis, 200, "Drone output as a share of normal over 36 months after an export ban");
+  const st = { ban: true, stock: 6 };
+  const tOut = tile("Output after stockpile"), tBott = tile("Bottleneck"), tFull = tile("Months at full output"), tMined = tile("Non-China mining", "not the limit");
+  sh.stats.append(tOut.el, tBott.el, tFull.el, tMined.el);
+  const cBan = checkCtl({ label: "China export ban", value: true, onChange: v => { st.ban = v; draw(); } });
+  const sStock = slider({ label: "Stockpile (months of magnets)", min: 0, max: 24, step: 1, value: 6, onInput: v => { st.stock = v; draw(); } });
+  sh.controls.append(cBan.el, sStock.el);
+  sh.actions.append(button("Reset", reset));
+  function draw() {
+    const r = MODEL.chokepoint(NODES, st.ban, st.stock);
+    nodeEls.forEach((e, i) => e.classList.toggle("bottleneck", st.ban && i === r.bottleneck));
+    lineChart(cv, { xMax: 36, yMax: 1.1, xLabel: "months after ban", yLabel: "drone output vs. normal", yFmt: v => Math.round(v * 100) + "%",
+      series: [{ pts: r.pts, color: cssVar("--side-a"), fill: true }],
+      vlines: st.ban ? [{ x: st.stock, label: "stockpile runs out" }] : [] });
+    tOut.set(st.ban ? fmt.pct(r.floor) : "100%", st.ban ? "of normal" : "no ban", st.ban);
+    tBott.set(st.ban ? NODES[r.bottleneck].name : "None", st.ban ? `China ${NODES[r.bottleneck].share}%` : "", st.ban);
+    tFull.set(st.ban ? String(st.stock) : "36+", st.ban ? "then the floor" : "");
+    tMined.set("40%", "mining is the widest step");
+    sh.summary.textContent = st.ban ? `With the ban on, output holds for ${st.stock} months and then falls to ${fmt.pct(r.floor)} of normal. The limit is ${NODES[r.bottleneck].name.toLowerCase()}, where China holds ${NODES[r.bottleneck].share}%.` : "No ban: output stays at 100%.";
+  }
+  function reset() { st.ban = true; st.stock = 6; cBan.set(true); sStock.set(6); draw(); }
+  cv.onResize(draw); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.8 cyber window */
+SIMS.cyberWindow = function (el) {
+  const sh = shell(el, { title: "Simulation · from flaw to exploit", assumptions: [
+    "Exposure window = max(0, time to patch − time to exploit).",
+    "Before AI, time to exploit is 60 days; with frontier AI about 4 hours (Cyber Defense Review 2026).",
+    "System-days of exposure = exposure window × exposed systems. The 10,000 exposed systems default is illustrative."
+  ] });
+  const cv = makeCanvas(sh.vis, 170, "Two timelines on a 90-day axis showing when exploitation becomes possible and when the patch lands");
+  const st = { patch: 30, systems: 10000 };
+  const tB = tile("Exposure · before AI"), tA = tile("Exposure · with AI"), tSB = tile("System-days · before"), tSA = tile("System-days · with AI");
+  sh.stats.append(tB.el, tA.el, tSB.el, tSA.el);
+  const sPatch = slider({ label: "Time to patch (days)", min: 1, max: 90, step: 1, value: 30, onInput: v => { st.patch = v; draw(); } });
+  const sSys = slider({ label: "Exposed systems (illustrative)", min: 100, max: 1e6, log: true, value: 10000, format: v => fmt.int(v), onInput: v => { st.systems = Math.round(v); draw(); } });
+  sh.controls.append(sPatch.el, sSys.el);
+  sh.actions.append(button("Reset", reset));
+  function draw() {
+    const r = MODEL.cyberWindow(st.patch, st.systems);
+    const { ctx, W, H } = cv; ctx.clearRect(0, 0, W, H);
+    const fg = cssVar("--fg"), muted = cssVar("--muted"), rule = cssVar("--rule"), red = cssVar("--dom-nuclear"), ok = cssVar("--dom-cyber");
+    const l = 150, rgt = 16, X = d => l + d / 90 * (W - l - rgt);
+    ctx.font = "11px system-ui, sans-serif";
+    for (const t of [0, 15, 30, 45, 60, 75, 90]) { ctx.strokeStyle = rule; ctx.beginPath(); ctx.moveTo(X(t), 20); ctx.lineTo(X(t), H - 26); ctx.stroke(); ctx.fillStyle = muted; ctx.textAlign = "center"; ctx.fillText(t + "d", X(t), H - 10); }
+    const rows = [["Before AI", "60 days to exploit", 60], ["With frontier AI", "4 hours to exploit", 4 / 24]];
+    rows.forEach((row, i) => {
+      const y = 36 + i * 54;
+      ctx.fillStyle = fg; ctx.textAlign = "left"; ctx.font = "600 12px system-ui, sans-serif"; ctx.fillText(row[0], 8, y + 4);
+      ctx.fillStyle = muted; ctx.font = "11px system-ui, sans-serif"; ctx.fillText(row[1], 8, y + 18);
+      ctx.fillStyle = alpha(ok, 0.35); ctx.fillRect(X(0), y - 10, X(Math.min(90, row[2])) - X(0), 20);
+      const expo = Math.max(0, st.patch - row[2]);
+      if (expo > 0) { ctx.fillStyle = alpha(red, 0.75); ctx.fillRect(X(row[2]), y - 10, X(st.patch) - X(row[2]), 20); ctx.fillStyle = red; ctx.textAlign = "left"; ctx.font = "600 11px system-ui, sans-serif"; const tx = X(row[2]) + 6; ctx.fillText(`exposed ${expo.toFixed(expo < 1 ? 2 : 1)} days`, Math.min(tx, W - 120), y + 4); }
+      ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X(st.patch), y - 14); ctx.lineTo(X(st.patch), y + 14); ctx.stroke();
+    });
+    ctx.fillStyle = fg; ctx.font = "11px system-ui, sans-serif"; ctx.textAlign = X(st.patch) > W - 80 ? "right" : "left"; ctx.fillText("patch lands · day " + st.patch, X(st.patch) + (X(st.patch) > W - 80 ? -6 : 6), 14);
+    tB.set(r.before.toFixed(1) + " days", r.before === 0 ? "patch beats exploit" : "", r.before > 0);
+    tA.set(r.after.toFixed(1) + " days", "exploit beats patch", r.after > 0);
+    tSB.set(short(r.sysBefore), `${fmt.int(st.systems)} systems`);
+    tSA.set(short(r.sysAfter), `${fmt.int(st.systems)} systems`, r.sysAfter > 0);
+    sh.summary.textContent = `With a ${st.patch}-day patch cycle, exposure is ${r.before.toFixed(1)} days before AI and ${r.after.toFixed(1)} days with it: ${short(r.sysAfter)} system-days across ${fmt.int(st.systems)} systems.`;
+  }
+  function reset() { st.patch = 30; st.systems = 10000; sPatch.set(30); sSys.set(10000); draw(); }
+  cv.onResize(draw); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.9 robots shrink the bargaining range */
+SIMS.robotsCost = function (el) {
+  const sh = shell(el, { title: "Simulation · robots shrink the bargaining range", tag: "PROJECTION", assumptions: [
+    "Each side's cost of war c = c_money + c_human × (1 − r), where r is the robotic share of the force.",
+    "Defaults are illustrative: c_money = 0.04, c_human = 0.12 for both sides, p = 0.5.",
+    "The bargaining zone has width c_A + c_B. With these defaults it falls from 0.32 at r = 0 to 0.08 at r = 1."
+  ] });
+  const cvB = makeCanvas(sh.vis, 175, "Bargaining range narrowing as the robotic share rises");
+  const cvW = makeCanvas(sh.vis, 180, "Zone width against robotic share");
+  const def = { r: 0.1, cMoney: 0.04, cHuman: 0.12, p: 0.5 };
+  const st = Object.assign({}, def);
+  const tC = tile("Cost of war per side"), tW = tile("Zone width", "c_A + c_B"), tZ = tile("Deal zone"), tR = tile("Robotic share");
+  sh.stats.append(tR.el, tC.el, tW.el, tZ.el);
+  const sR = slider({ label: "r · robotic share of the force", min: 0, max: 1, step: 0.01, value: def.r, format: v => fmt.pct(v), onInput: v => { st.r = v; draw(); } });
+  const sM = slider({ label: "c_money · financial cost", min: 0, max: 0.1, step: 0.005, value: def.cMoney, format: v => v.toFixed(3), onInput: v => { st.cMoney = v; draw(); } });
+  const sH = slider({ label: "c_human · human cost at r = 0", min: 0, max: 0.2, step: 0.01, value: def.cHuman, format: v => v.toFixed(2), onInput: v => { st.cHuman = v; draw(); } });
+  const sP = slider({ label: "p · A's chance of winning", min: 0.1, max: 0.9, step: 0.01, value: def.p, format: v => v.toFixed(2), onInput: v => { st.p = v; draw(); } });
+  sh.controls.append(sR.el, sP.el, sM.el, sH.el);
+  sh.actions.append(button("Reset", reset));
+  function draw() {
+    const c = MODEL.robotCost(st.cMoney, st.cHuman, st.r);
+    const z = MODEL.bargain(st.p, c, c);
+    drawBargain(cvB, { p: st.p, cA: c, cB: c, lo: z.lo, hi: z.hi, x: null, shift: false, unc: false });
+    const pts = []; for (let i = 0; i <= 50; i++) { const r = i / 50; pts.push([r, 2 * MODEL.robotCost(st.cMoney, st.cHuman, r)]); }
+    lineChart(cvW, { xMax: 1, yMax: Math.max(0.1, 2 * (st.cMoney + st.cHuman)) * 1.1, xLabel: "robotic share r", yLabel: "zone width", xFmt: v => fmt.pct(v), yFmt: v => v.toFixed(2),
+      series: [{ pts, color: cssVar("--side-a") }], marks: [{ x: st.r, y: z.width, color: cssVar("--side-a"), label: `width ${z.width.toFixed(2)}` }] });
+    tR.set(fmt.pct(st.r), "of the force is robotic");
+    tC.set(c.toFixed(3), `${st.cMoney.toFixed(3)} + ${st.cHuman.toFixed(2)} × ${(1 - st.r).toFixed(2)}`);
+    tW.set(z.width.toFixed(2), z.width < 0.12 ? "little room for peace" : "", z.width < 0.12);
+    tZ.set(`${z.lo.toFixed(2)} – ${z.hi.toFixed(2)}`);
+    sh.summary.textContent = `At a robotic share of ${fmt.pct(st.r)}, each side's cost of war is ${c.toFixed(3)} and the deal zone is ${z.width.toFixed(2)} wide, from ${z.lo.toFixed(2)} to ${z.hi.toFixed(2)}.`;
+  }
+  function reset() { Object.assign(st, def); sR.set(st.r); sM.set(st.cMoney); sH.set(st.cHuman); sP.set(st.p); draw(); }
+  cvB.onResize(draw); cvW.onResize(draw); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.10 escalation */
+SIMS.escalation = function (el) {
+  const c = MODEL.escConst;
+  const sh = shell(el, { title: "Simulation · decision time and accidental war", tag: "PROJECTION", assumptions: [
+    `Each crisis has ${c.n} alerts; each is false with probability q (default 0.05).`,
+    `Leaders catch a false alert with probability 1 − e^(−T/τ), where T is decision time in minutes and τ = ${c.tau} (illustrative).`,
+    `An uncaught false alert is acted on with probability ${c.a0} × (1 + b), capped at 1, where b is the AI escalation bias. The base rate ${c.a0} is illustrative.`,
+    "A crisis ends in accidental war if any false alert is acted on. The headline number is a Monte Carlo of 10,000 crises run in chunks; the curve is the closed form of the same model."
+  ] });
+  const cv = makeCanvas(sh.vis, 240, "Probability of accidental war against decision time, with the current setting marked");
+  const st = { T: 10, b: 0.3, q: 0.05 };
+  const tP = tile("Chance of accidental war", "Monte Carlo, 10,000 crises"), tC = tile("Closed form"), tCatch = tile("Chance to catch a false alert"), tFalse = tile("Expected false alerts", "per crisis");
+  sh.stats.append(tP.el, tC.el, tCatch.el, tFalse.el);
+  const sT = slider({ label: "T · decision time (minutes)", min: 1, max: 120, log: true, value: 10, format: v => v < 10 ? v.toFixed(1) + " min" : Math.round(v) + " min", onInput: v => { st.T = v; draw(); } });
+  const sB = slider({ label: "b · AI escalation bias", min: 0, max: 1, step: 0.05, value: 0.3, format: v => v.toFixed(2), onInput: v => { st.b = v; draw(); } });
+  const sQ = slider({ label: "q · false-alert rate", min: 0.01, max: 0.2, step: 0.01, value: 0.05, format: v => v.toFixed(2), onInput: v => { st.q = v; draw(); } });
+  sh.controls.append(sT.el, sB.el, sQ.el);
+  sh.actions.append(button("Reset", reset));
+  let token = 0, mc = null;
+  const rng = MODEL.rng(Date.now() & 0xffffffff);
+  function runMC() {
+    const my = ++token; let done = 0, wars = 0; mc = null;
+    const chunk = () => {
+      if (my !== token) return;
+      const n = Math.min(500, 10000 - done);
+      wars += MODEL.escChunk(st.T, st.b, st.q, n, rng); done += n;
+      tP.set(fmt.pct(wars / done, 1), done < 10000 ? `running · ${fmt.int(done)} crises` : "Monte Carlo, 10,000 crises", wars / done > 0.1);
+      if (done < 10000) requestAnimationFrame(chunk); else { mc = wars / done; drawChart(); sh.summary.textContent = summary(); }
+    };
+    requestAnimationFrame(chunk);
+  }
+  function summary() { return `With ${st.T < 10 ? st.T.toFixed(1) : Math.round(st.T)} minutes to decide, an AI bias of ${st.b.toFixed(2)} and a false-alert rate of ${st.q.toFixed(2)}, about ${fmt.pct(mc != null ? mc : MODEL.escClosed(st.T, st.b, st.q), 1)} of crises end in accidental war.`; }
+  function drawChart() {
+    const pts = []; for (let i = 0; i <= 120; i++) { const T = Math.max(0.5, i); pts.push([i, MODEL.escClosed(T, st.b, st.q)]); }
+    const yMax = Math.max(0.1, ...pts.map(p => p[1])) * 1.1;
+    lineChart(cv, { xMax: 120, yMax, xLabel: "decision time (minutes)", yLabel: "chance of accidental war", xFmt: v => v + "m", yFmt: v => fmt.pct(v),
+      series: [{ pts, color: cssVar("--side-a") }],
+      marks: [{ x: st.T, y: mc != null ? mc : MODEL.escClosed(st.T, st.b, st.q), color: cssVar("--dom-nuclear"), r: 6, label: `T = ${st.T < 10 ? st.T.toFixed(1) : Math.round(st.T)} min · ${fmt.pct(mc != null ? mc : MODEL.escClosed(st.T, st.b, st.q), 1)}` }] });
+  }
+  function draw() {
+    const closed = MODEL.escClosed(st.T, st.b, st.q);
+    tC.set(fmt.pct(closed, 1), "1 − (1 − q·e^(−T/τ)·a)^n");
+    tCatch.set(fmt.pct(1 - Math.exp(-st.T / c.tau)), `at T = ${st.T < 10 ? st.T.toFixed(1) : Math.round(st.T)} min`);
+    tFalse.set((c.n * st.q).toFixed(2), `${c.n} alerts × q`);
+    drawChart(); runMC(); sh.summary.textContent = summary();
+  }
+  function reset() { st.T = 10; st.b = 0.3; st.q = 0.05; sT.set(10); sB.set(0.3); sQ.set(0.05); draw(); }
+  cv.onResize(drawChart); draw();
+  return { start() {}, stop() {}, reset };
+};
+
+/* 5.11 AGI race */
+SIMS.agiRace = function (el) {
+  const sh = shell(el, { title: "Simulation · the AGI race, sabotage and MAIM", tag: "PROJECTION", assumptions: [
+    "Two states progress toward an AGI threshold of 100. Each step adds a research rate plus noise.",
+    "The trailing state sees the leader's true progress with probability v, otherwise a noisy estimate. When the observed lead exceeds 15, it sabotages if the expected loss from falling behind for good exceeds the cost of sabotage. Expected loss = loss × min(1, lead ÷ 50).",
+    "Sabotage succeeds with probability s and cuts the leader's progress by 30%. Every attempt raises tension by 1; tension decays 0.03 a step; at 6 the outcome is open conflict.",
+    "MAIM: when deterrence is credible (v × s ≥ 0.5 and the trailer is willing to sabotage), neither side dares a visible sprint and both research at a quarter pace. If nobody reaches 100 in 120 steps the outcome is mutual restraint.",
+    "Rideout (RAND 2026) halves sabotage success, standing in for hardened data centers, and halves the expected loss from falling behind."
+  ] });
+  const cv = makeCanvas(sh.vis, 260, "Both states' progress toward the AGI threshold over time, with sabotage events marked");
+  const meterWrap = h("div", { class: "ui" }, h("div", { style: "display:flex;justify-content:space-between;gap:10px;margin-bottom:4px" }, h("span", {}, h("b", {}, "Tension")), h("span", { id: "tens" + (++UID) })), h("div", { class: "meter" }, h("i")));
+  const tensVal = meterWrap.querySelector("span[id]"), tensBar = meterWrap.querySelector(".meter i");
+  sh.vis.append(legend([{ color: cssVar("--side-a"), label: "State A" }, { color: cssVar("--side-b"), label: "State B" }, { color: cssVar("--dom-nuclear"), label: "Sabotage (filled = succeeded)" }]), meterWrap);
+  const tOut = tile("Outcome"), tA = tile("State A progress"), tB = tile("State B progress"), tSab = tile("Sabotage attempts");
+  sh.stats.append(tOut.el, tA.el, tB.el, tSab.el);
+  const def = { rA: 2.0, rB: 1.6, v: 0.8, s: 0.6, cost: 4, loss: 10, Lstar: 15, rideout: false };
+  const o = Object.assign({}, def);
+  let st = MODEL.agiInit(), rng = MODEL.rng(Date.now() & 0xffffffff);
+  const S = {};
+  S.rA = slider({ label: "A's research speed", min: 0.5, max: 4, step: 0.1, value: o.rA, format: v => v.toFixed(1), onInput: v => { o.rA = v; } });
+  S.rB = slider({ label: "B's research speed", min: 0.5, max: 4, step: 0.1, value: o.rB, format: v => v.toFixed(1), onInput: v => { o.rB = v; } });
+  S.v = slider({ label: "v · visibility of the leader's progress", min: 0, max: 1, step: 0.05, value: o.v, format: v => v.toFixed(2), onInput: v => { o.v = v; draw(0); } });
+  S.s = slider({ label: "s · sabotage success", min: 0, max: 1, step: 0.05, value: o.s, format: v => v.toFixed(2), onInput: v => { o.s = v; draw(0); } });
+  S.cost = slider({ label: "Cost of sabotage", min: 0, max: 20, step: 0.5, value: o.cost, format: v => v.toFixed(1), onInput: v => { o.cost = v; draw(0); } });
+  S.loss = slider({ label: "Loss from falling behind for good", min: 0, max: 20, step: 0.5, value: o.loss, format: v => v.toFixed(1), onInput: v => { o.loss = v; draw(0); } });
+  const cRide = checkCtl({ label: "Rideout: hardened AI development (RAND 2026)", value: false, onChange: v => { o.rideout = v; draw(0); } });
+  sh.controls.append(S.rA.el, S.rB.el, S.v.el, S.s.el, S.cost.el, S.loss.el, cRide.el);
+  const anim = animator(() => MODEL.agiStep(st, o, rng), draw, () => 12);
+  const playBtn = playButton(anim);
+  sh.actions.append(playBtn, button("Step", () => { MODEL.agiStep(st, o, rng); draw(0); }), button("Reset", reset));
+  function draw() {
+    const sEff = o.rideout ? o.s * 0.5 : o.s, lossEff = o.rideout ? o.loss * 0.5 : o.loss;
+    const credible = o.v * sEff * (lossEff > o.cost ? 1 : 0) >= 0.5;
+    lineChart(cv, { xMax: 120, yMax: 110, xLabel: "steps", yLabel: "progress toward AGI",
+      series: [{ pts: st.hA, color: cssVar("--side-a") }, { pts: st.hB, color: cssVar("--side-b") }],
+      hlines: [{ y: 100, label: "AGI threshold", color: cssVar("--muted") }],
+      marks: st.events.map(e => ({ x: e.step, y: (e.target === "A" ? st.hA : st.hB)[Math.min(e.step, st.hA.length - 1)][1], color: cssVar("--dom-nuclear"), r: 5, hollow: !e.ok })) });
+    const pct = Math.min(100, st.tension / 6 * 100);
+    tensBar.style.width = pct + "%"; tensVal.textContent = `${st.tension.toFixed(1)} / 6` + (credible ? " · deterrence credible, both throttled" : "");
+    tOut.set(st.outcome || (st.step === 0 ? "Not started" : "Racing"), st.outcome ? `after ${st.step} steps` : credible ? "MAIM in effect" : `step ${st.step}`, st.outcome === "Open conflict");
+    tA.set(Math.min(100, st.pA).toFixed(0), "of 100");
+    tB.set(Math.min(100, st.pB).toFixed(0), "of 100");
+    tSab.set(String(st.events.length), `${st.events.filter(e => e.ok).length} succeeded`, st.events.length > 2);
+    sh.summary.textContent = `Step ${st.step}: A at ${st.pA.toFixed(0)}, B at ${st.pB.toFixed(0)}. ${st.events.length} sabotage attempt${st.events.length === 1 ? "" : "s"}, tension ${st.tension.toFixed(1)}.` + (st.outcome ? ` Outcome: ${st.outcome}.` : credible ? " Deterrence is credible, so both sides hold back." : "");
+  }
+  let visible = false;
+  function reset() { anim.stop(); st = MODEL.agiInit(); rng = MODEL.rng(Date.now() & 0xffffffff); draw(0); if (!REDUCED && visible) anim.start(); }
+  cv.onResize(() => draw(0)); draw(0);
+  return {
+    start() { visible = true; if (!REDUCED && !st.outcome) anim.start(); },
+    stop() { visible = false; anim.stop(); },
+    reset
+  };
+};
+
+/* =====================================================================
+   RENDERING: eras, stations, lanes, dashboard, sources
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const ORDERED = [];              // stations in display order
+const stationEls = [];           // same order
+const instById = {};             // simulation instances by station id
+const laneDots = [];             // [{el, idx}]
+const eraCount = {}, eraPos = {};
+
+function eraOf(id) { return ERAS.find(e => e.id === id); }
+function yearLabel(s) { return s.era === "postagi" ? "AFTER AGI" : String(s.year); }
+
+function sourceLinks(keys) {
+  if (!keys || !keys.length) return null;
+  const p = h("p", { class: "src" }, "Source: ");
+  keys.forEach((k, i) => {
+    const src = SRC[k]; if (!src) return;
+    if (i) p.append(" · ");
+    p.append(h("a", { href: src.url, target: "_blank", rel: "noopener" }, src.label));
+  });
+  return p;
+}
+function chips(domains) {
+  return domains.map(d => h("span", { class: "chip", style: `--dc: var(${DOMAINS[d].css})` }, DOMAINS[d].label));
+}
+
+function renderStation(s, idx) {
+  const isProj = s.status === "projection" || s.year >= 2036;
+  const el = h("article", { class: "station" + (s.sim ? " has-sim" : "") + (s.cards ? " has-cards" : ""), id: "st-" + s.id, "data-idx": idx },
+    h("span", { class: "dot" + (isProj ? " hollow" : ""), "aria-hidden": "true" }),
+    h("div", { class: "st-head" },
+      h("span", { class: "st-year" }, yearLabel(s)),
+      chips(s.domains),
+      isProj ? h("span", { class: "ptag" }, "PROJECTION") : null,
+      s.status === "analysis" || s.alsoAnalysis ? h("span", { class: "ptag ana" }, "ANALYSIS") : null),
+    h("h3", {}, s.title),
+    s.body.map(t => h("p", {}, t)),
+    s.cards ? h("div", { class: "cards" }, s.cards.map(c => h("div", { class: "card" }, h("h4", {}, c.h), h("p", {}, c.p)))) : null,
+    sourceLinks(s.sources),
+    s.link ? h("p", { class: "src" }, h("a", { href: "#st-" + (STATIONS.find(x => x.sim === s.link.sim) || {}).id, "data-link-sim": s.link.sim, "data-link-action": s.link.action }, s.link.text + " →")) : null,
+    s.sim ? h("div", { class: "sim", "data-sim": s.sim }) : null
+  );
+  return el;
+}
+
+function renderAll() {
+  const root = $("#eras");
+  ERAS.forEach(era => {
+    const list = STATIONS.filter(s => s.era === era.id).sort((a, b) => a.year - b.year);
+    eraCount[era.id] = list.length;
+    root.append(h("header", { class: "era-header", id: era.id },
+      h("div", { class: "ey" }, era.id === "postagi" ? "AFTER AGI" : "ERA · " + era.year),
+      h("h2", {}, era.label),
+      h("div", { class: "eq" }, era.question)));
+    const wrap = h("div", { class: "spine-wrap" });
+    list.forEach((s, i) => {
+      const idx = ORDERED.length; ORDERED.push(s); eraPos[s.id] = i;
+      const el = renderStation(s, idx); stationEls.push(el); wrap.append(el);
+    });
+    root.append(wrap);
+  });
+  // mount simulations after the DOM exists so canvases have a width
+  ORDERED.forEach((s, i) => {
+    if (!s.sim || !SIMS[s.sim]) return;
+    const host = stationEls[i].querySelector(".sim");
+    try { instById[s.id] = SIMS[s.sim](host, s.simOpts || {}); }
+    catch (err) { console.error("Simulation failed to mount:", s.sim, err); host.append(h("p", { class: "hint" }, "This simulation could not load.")); }
+  });
+  // cross-links into a simulation (Powell → bargaining power shift)
+  document.querySelectorAll("a[data-link-sim]").forEach(a => a.addEventListener("click", () => {
+    const target = ORDERED.find(s => s.sim === a.dataset.linkSim);
+    const inst = target && instById[target.id];
+    if (inst && typeof inst[a.dataset.linkAction] === "function") inst[a.dataset.linkAction]();
+  }));
+}
+
+function renderSources() {
+  const groups = ["Theory", "2026 evidence", "After AGI"];
+  const root = $("#sourcelist");
+  groups.forEach(g => {
+    const items = Object.values(SRC).filter(s => s.group === g);
+    if (!items.length) return;
+    root.append(h("h3", {}, g), h("ul", {}, items.map(s => h("li", {}, h("a", { href: s.url, target: "_blank", rel: "noopener" }, s.label), " — ", h("span", { class: "cite" }, s.cite)))));
+  });
+}
+
+/* ---------- Year bar ---------- */
+const yb = { year: $("#yb-year"), era: $("#yb-era"), track: $("#yb-track") };
+const markers = [];
+function buildTrack() {
+  yb.track.append(h("div", { class: "rail" }), h("div", { class: "fill", id: "yb-fill" }));
+  ERAS.forEach((era, i) => {
+    const b = h("button", { class: "mk", type: "button", "aria-label": "Jump to " + (era.id === "postagi" ? "After AGI" : era.year), style: `left: calc(10px + (100% - 44px) * ${i / (ERAS.length - 1)})`,
+      onclick: () => { const t = document.getElementById(era.id); t && t.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" }); } },
+      h("span", {}, era.id === "postagi" ? "After AGI" : era.year));
+    yb.track.append(b); markers.push(b);
+  });
+}
+let shownYear = ERAS[0].year, shownEra = ERAS[0].id, yearRaf = 0;
+function setYear(target, eraId) {
+  cancelAnimationFrame(yearRaf);
+  const from = shownYear, t0 = performance.now(), dur = REDUCED ? 0 : 700;
+  const toAgi = eraId === "postagi", fromAgi = shownEra === "postagi";
+  shownEra = eraId;
+  const tick = now => {
+    const k = dur ? Math.min(1, (now - t0) / dur) : 1, e = 1 - Math.pow(1 - k, 3);
+    shownYear = from + (target - from) * e;
+    if (toAgi) { yb.year.textContent = "After AGI"; yb.year.classList.add("text"); }
+    else { yb.year.textContent = String(Math.round(fromAgi ? target : shownYear)); yb.year.classList.remove("text"); }
+    updateDash(shownYear);
+    if (k < 1) yearRaf = requestAnimationFrame(tick); else shownYear = target;
+  };
+  yearRaf = requestAnimationFrame(tick);
+}
+
+/* ---------- Dashboard ---------- */
+const dashEls = {}, stripEls = {};
+function buildDash() {
+  const box = h("div", { class: "box" }, h("div", { class: "title" }, h("span", {}, "Year dashboard"), h("span", { class: "ptag hidden", id: "dash-ptag" }, "PROJECTION")));
+  DASH_ORDER.forEach(k => {
+    const val = h("span", { class: "val" });
+    const segs = Array.from({ length: 5 }, () => h("b")); const segWrap = segs.map(b => h("i", {}, b));
+    box.append(h("div", { class: "ind" }, h("div", { class: "row" }, h("b", {}, DASH_NAMES[k]), val), h("div", { class: "bar" }, segWrap)));
+    dashEls[k] = { val, segs };
+  });
+  box.append(h("div", { class: "foot" }, "1995 and 2026 are our reading of the record. After 2026 every value is a projection."));
+  $("#dash").append(box);
+  const strip = $("#dash-strip .in");
+  ["deterrence", "robotic", "powers"].forEach(k => { const b = h("b"); strip.append(h("span", { class: "it" }, DASH_NAMES[k] + " ", b)); stripEls[k] = b; });
+  strip.append(h("span", { class: "ptag hidden", id: "strip-ptag" }, "PROJECTION"));
+}
+function dashValue(key, y) {
+  const kf = DASH_KEYFRAMES;
+  if (y <= kf[0].year) return kf[0][key];
+  if (y >= kf[kf.length - 1].year) return kf[kf.length - 1][key];
+  for (let i = 0; i < kf.length - 1; i++) {
+    if (y >= kf[i].year && y <= kf[i + 1].year) { const t = (y - kf[i].year) / (kf[i + 1].year - kf[i].year); return kf[i][key] + (kf[i + 1][key] - kf[i][key]) * t; }
+  }
+  return kf[0][key];
+}
+function updateDash(y) {
+  const proj = y > 2026.01;
+  DASH_ORDER.forEach(k => {
+    const v = dashValue(k, y), lvl = Math.max(0, Math.min(4, Math.round(v)));
+    const label = DASH_LABELS[k] ? DASH_LABELS[k][lvl] : String(Math.round(v));
+    dashEls[k].val.textContent = label;
+    dashEls[k].segs.forEach((seg, i) => { seg.style.width = (Math.max(0, Math.min(1, v - i + 1)) * 100) + "%"; });
+    if (stripEls[k]) stripEls[k].textContent = label;
+  });
+  $("#dash-ptag").classList.toggle("hidden", !proj);
+  $("#strip-ptag").classList.toggle("hidden", !proj);
+}
+
+/* ---------- Lanes ---------- */
+const laneKeys = Object.keys(DOMAINS);
+let laneEls = {}, laneHdr = {}, vpEl = null;
+function buildLanes() {
+  const rail = $("#lanes");
+  const hdr = h("div", { class: "hdr" }), body = h("div", { class: "body" });
+  laneKeys.forEach(k => {
+    laneHdr[k] = h("span", { style: `--lc: var(${DOMAINS[k].css})` }, DOMAINS[k].short); hdr.append(laneHdr[k]);
+    laneEls[k] = h("div", { class: "lane", style: `--lc: var(${DOMAINS[k].css})` }); body.append(laneEls[k]);
+  });
+  vpEl = h("div", { class: "vp" }); body.append(vpEl);
+  rail.append(hdr, body);
+  ORDERED.forEach((s, idx) => s.domains.forEach(d => {
+    const dot = h("span", { class: "ld" + (s.status === "projection" ? " hollow" : ""), style: `--lc: var(${DOMAINS[d].css})` });
+    laneEls[d].append(dot); laneDots.push({ el: dot, idx, d });
+  }));
+}
+function layoutLanes() {
+  const docH = document.documentElement.scrollHeight;
+  laneDots.forEach(({ el, idx }) => {
+    const r = stationEls[idx].getBoundingClientRect();
+    const center = r.top + window.scrollY + Math.min(r.height / 2, 120);
+    el.style.top = (center / docH * 100).toFixed(2) + "%";
+  });
+  updateViewportMarker();
+}
+function updateViewportMarker() {
+  if (!vpEl) return;
+  const docH = document.documentElement.scrollHeight;
+  vpEl.style.top = ((window.scrollY + window.innerHeight * 0.5) / docH * 100).toFixed(2) + "%";
+}
+
+/* ---------- Active station ---------- */
+let activeIdx = -1;
+function setActive(idx) {
+  if (idx === activeIdx || idx < 0) return;
+  activeIdx = idx;
+  const s = ORDERED[idx], era = eraOf(s.era), ei = ERAS.indexOf(era);
+  stationEls.forEach((el, i) => el.classList.toggle("active", i === idx));
+  setYear(s.year, s.era);
+  yb.era.textContent = era.label;
+  markers.forEach((m, i) => { m.classList.toggle("done", i < ei); m.classList.toggle("on", i === ei); });
+  const frac = (eraPos[s.id] + 1) / eraCount[era.id];
+  $("#yb-fill").style.width = `calc((100% - 44px) * ${Math.min(1, (ei + frac) / (ERAS.length - 1))})`;
+  const active = new Set(s.domains);
+  laneKeys.forEach(k => { laneEls[k].classList.toggle("on", active.has(k)); laneHdr[k].classList.toggle("on", active.has(k)); });
+  laneDots.forEach(d => { d.el.classList.toggle("lit", d.idx <= idx); d.el.classList.toggle("on", d.idx === idx); });
+}
+const inBand = new Set();
+function pickActive() {
+  if (!inBand.size) return;
+  const mid = window.innerHeight / 2; let best = null, bd = Infinity;
+  inBand.forEach(el => { const r = el.getBoundingClientRect(); const d = Math.abs(Math.max(r.top, Math.min(r.bottom, mid)) - mid) + Math.abs((r.top + r.bottom) / 2 - mid) * 0.001; if (d < bd) { bd = d; best = el; } });
+  if (best) setActive(+best.dataset.idx);
+}
+
+/* ---------- Boot ---------- */
+function boot() {
+  buildTrack(); buildDash(); renderAll(); renderSources(); buildLanes();
+  updateDash(ERAS[0].year);
+  const io = new IntersectionObserver(entries => { entries.forEach(e => e.isIntersecting ? inBand.add(e.target) : inBand.delete(e.target)); pickActive(); }, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
+  stationEls.forEach(el => io.observe(el));
+  const simIO = new IntersectionObserver(entries => entries.forEach(e => {
+    const s = ORDERED[+e.target.dataset.idx], inst = instById[s.id]; if (!inst) return;
+    if (e.isIntersecting && e.intersectionRatio >= 0.3) inst.start(); else if (!e.isIntersecting) inst.stop();
+  }), { threshold: [0, 0.3] });
+  stationEls.forEach(el => { if (el.querySelector(".sim")) simIO.observe(el); });
+  layoutLanes();
+  let relayout = 0;
+  const schedule = () => { cancelAnimationFrame(relayout); relayout = requestAnimationFrame(layoutLanes); };
+  window.addEventListener("resize", schedule);
+  if (window.ResizeObserver) new ResizeObserver(schedule).observe($("#content"));
+  window.addEventListener("scroll", updateViewportMarker, { passive: true });
+  setTimeout(layoutLanes, 400);
+  if (location.hash && ERAS.some(e => "#" + e.id === location.hash)) {
+    const t = document.querySelector(location.hash); t && setTimeout(() => t.scrollIntoView({ block: "start" }), 50);
+  }
+  setActive(0);
+}
+boot();
+</script>
+</body>
+</html>
